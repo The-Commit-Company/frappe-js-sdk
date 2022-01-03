@@ -1,4 +1,5 @@
 import { FrappeAuth } from "..";
+import { FrappeDB } from "../db";
 
 export class FrappeApp {
 
@@ -13,8 +14,12 @@ export class FrappeApp {
         this.name = name ?? 'FrappeApp';
     }
 
-    /** Initializes a FrappeAuth object for the app */
+    /** Returns a FrappeAuth object for the app */
     auth() {
         return new FrappeAuth(this.url)
+    }
+    /** Returns a FrappeDB object for the app */
+    db() {
+        return new FrappeDB(this.url)
     }
 }

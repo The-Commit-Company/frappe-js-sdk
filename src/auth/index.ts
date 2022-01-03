@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { FrappeApp } from '../frappe_app'
 import { AuthCredentials, AuthResponse, AuthError } from './types'
 
 
