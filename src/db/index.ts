@@ -79,7 +79,11 @@ export class FrappeDB {
     }
 
 
-    /** Creates a new document in the database */
+    /** Creates a new document in the database
+     * @param {string} doctype Name of the doctype
+     * @param {Object} value Contents of the document
+     * @returns Promise which resolves with the complete document object
+     */
     async createDoc<T>(doctype: string, value: T): Promise<FrappeDoc<T>> {
 
         return axios.post(`${this.appURL}/api/resource/${doctype}`, {
@@ -102,7 +106,12 @@ export class FrappeDB {
             })
     }
 
-    /** Updates a document in the database */
+    /** Updates a document in the database
+     * @param {string} doctype Name of the doctype
+     * @param {string} docname Name of the document
+     * @param {Object} value Contents of the document to update (only the fields that are to be updated)
+     * @returns Promise which resolves with the complete document object
+     */
     async updateDoc<T>(doctype: string, docname: string, value: Partial<T>): Promise<FrappeDoc<T>> {
 
         return axios.put(`${this.appURL}/api/resource/${doctype}/${docname}`, {
@@ -149,45 +158,4 @@ export class FrappeDB {
                 } as DBError
             })
     }
-
-    /** Gets the currently logged in user */
-    // async getLoggedInUser(): Promise<string> {
-
-    //     return axios.get(`${this.appURL}/api/method/frappe.auth.get_logged_user`, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json'
-    //         },
-    //         withCredentials: true
-    //     })
-    //         .then(res => res.data.message)
-    //         .catch(error => {
-    //             throw {
-    //                 httpStatus: error.response.status,
-    //                 httpStatusText: error.response.statusText,
-    //                 message: "There was an error while fetching the logged in user",
-    //                 exception: error.response.data.exception ?? ""
-    //             } as AuthError
-    //         })
-    // }
-    /** Logs the user out */
-    // async logout(): Promise<void> {
-
-    //     return axios.post(`${this.appURL}/api/method/logout`, {}, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json'
-    //         },
-    //         withCredentials: true
-    //     })
-    //         .then(() => { return })
-    //         .catch(error => {
-    //             throw {
-    //                 httpStatus: error.response.status,
-    //                 httpStatusText: error.response.statusText,
-    //                 message: error.response.data.message ?? "There was an error while logging out",
-    //                 exception: error.response.data.exception ?? ""
-    //             } as AuthError
-    //         })
-    // }
 }
