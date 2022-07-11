@@ -1,6 +1,5 @@
 import { FrappeAuth } from '..';
 import { FrappeDB } from '../db';
-
 export class FrappeApp {
   /** URL of the Frappe instance */
   readonly url: string;
@@ -8,9 +7,15 @@ export class FrappeApp {
   /** Name of the Frappe App instance */
   readonly name: string;
 
-  constructor(url: string, name?: string) {
+  /** Port on which Socket IO is running. 
+   * Default is 9000.
+   */
+  readonly socketPort: string;
+
+  constructor(url: string, name?: string, socketPort?: string) {
     this.url = url;
     this.name = name ?? 'FrappeApp';
+    this.socketPort = socketPort ?? '9000';
   }
 
   /** Returns a FrappeAuth object for the app */
