@@ -16,13 +16,21 @@ export class FrappeDB {
    * @returns Promise which resolves to the document object
    */
   async getDoc<T>(doctype: string, docname: string): Promise<T> {
-    return axios
-      .get(`${this.appURL}/api/resource/${doctype}/${docname}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        withCredentials: true,
+
+    let headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios.get(`${this.appURL}/api/resource/${doctype}/${docname}`,
+      {
+        headers: headers,
+        withCredentials: true
       })
       .then((res) => res.data.data)
       .catch((error) => {
@@ -35,6 +43,7 @@ export class FrappeDB {
       });
   }
 
+
   /**
    * Gets a list of documents from the database for a particular doctype. Add filters, sorting order and pagination to get a filtered and sorted list of documents.
    * @param {string} doctype Name of the doctype
@@ -42,7 +51,9 @@ export class FrappeDB {
    * @returns Promise which resolves to an array of documents
    */
   async getDocList<T>(doctype: string, args?: GetDocListArgs): Promise<T[]> {
+
     let params = {};
+
     if (args) {
       const { fields, filters, orFilters, orderBy, limit, limit_start, asDict = true } = args;
       const orderByString = orderBy ? `${orderBy?.field} ${orderBy?.order ?? 'asc'}` : '';
@@ -57,14 +68,21 @@ export class FrappeDB {
       };
     }
 
-    return axios
-      .get(`${this.appURL}/api/resource/${doctype}`, {
+    let headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios.get(`${this.appURL}/api/resource/${doctype}`,
+      {
         params,
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        withCredentials: true,
+        headers: headers,
+        withCredentials: true
       })
       .then((res) => res.data.data)
       .catch((error) => {
@@ -77,26 +95,32 @@ export class FrappeDB {
       });
   }
 
+
   /** Creates a new document in the database
    * @param {string} doctype Name of the doctype
    * @param {Object} value Contents of the document
    * @returns Promise which resolves with the complete document object
    */
   async createDoc<T>(doctype: string, value: T): Promise<FrappeDoc<T>> {
-    return axios
-      .post(
-        `${this.appURL}/api/resource/${doctype}`,
-        {
-          ...value,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          withCredentials: true,
-        },
-      )
+
+    let headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios.post(`${this.appURL}/api/resource/${doctype}`,
+      {
+        ...value,
+      },
+      {
+        headers: headers,
+        withCredentials: true
+      })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -108,6 +132,7 @@ export class FrappeDB {
       });
   }
 
+
   /** Updates a document in the database
    * @param {string} doctype Name of the doctype
    * @param {string} docname Name of the document
@@ -115,20 +140,25 @@ export class FrappeDB {
    * @returns Promise which resolves with the complete document object
    */
   async updateDoc<T>(doctype: string, docname: string, value: Partial<T>): Promise<FrappeDoc<T>> {
-    return axios
-      .put(
-        `${this.appURL}/api/resource/${doctype}/${docname}`,
-        {
-          ...value,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          withCredentials: true,
-        },
-      )
+
+    let headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios.put(`${this.appURL}/api/resource/${doctype}/${docname}`,
+      {
+        ...value,
+      },
+      {
+        headers: headers,
+        withCredentials: true
+      })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -140,6 +170,7 @@ export class FrappeDB {
       });
   }
 
+
   /**
    * Deletes a document in the database
    * @param {string} doctype Name of the doctype
@@ -147,13 +178,21 @@ export class FrappeDB {
    * @returns Promise which resolves an object with a message "ok"
    */
   async deleteDoc<T>(doctype: string, docname: string): Promise<{ message: string }> {
-    return axios
-      .delete(`${this.appURL}/api/resource/${doctype}/${docname}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        withCredentials: true,
+
+    let headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios.delete(`${this.appURL}/api/resource/${doctype}/${docname}`,
+      {
+        headers: headers,
+        withCredentials: true
       })
       .then((res) => res.data)
       .catch((error) => {
