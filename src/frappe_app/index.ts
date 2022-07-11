@@ -1,5 +1,10 @@
-import { FrappeAuth } from '..';
-import { FrappeDB } from '../db';
+
+
+export interface FrappeConfig {
+  appURL: string;
+  socketPort?: string;
+  name?: string;
+}
 export class FrappeApp {
   /** URL of the Frappe instance */
   readonly url: string;
@@ -12,18 +17,9 @@ export class FrappeApp {
    */
   readonly socketPort: string;
 
-  constructor(url: string, name?: string, socketPort?: string) {
-    this.url = url;
-    this.name = name ?? 'FrappeApp';
-    this.socketPort = socketPort ?? '9000';
-  }
-
-  /** Returns a FrappeAuth object for the app */
-  auth() {
-    return new FrappeAuth(this.url);
-  }
-  /** Returns a FrappeDB object for the app */
-  db() {
-    return new FrappeDB(this.url);
+  constructor(config: FrappeConfig) {
+    this.url = config.appURL;
+    this.name = config.name ?? 'FrappeApp';
+    this.socketPort = config.socketPort ?? '9000';
   }
 }

@@ -20,7 +20,11 @@ To get started, initialise the library:
 ```js
 import { FrappeApp } from "frappe-js-sdk";
 //Add your Frappe backend's URL
-const frappe = new FrappeApp("test.frappe.cloud")
+const frappe = new FrappeApp({
+    appURL: "https://test.frappe.cloud",
+    socketPort: "9002",
+    name: "Test Frappe App";
+})
 
 ```
 
@@ -29,7 +33,8 @@ const frappe = new FrappeApp("test.frappe.cloud")
 #### Initialise the auth library
 
 ```js
-const auth = frappe.auth()
+import { FrappeAuth } from "frappe-js-sdk";
+const auth = new FrappeAuth(frappe);
 ```
 
 #### Login a user:
@@ -65,7 +70,8 @@ auth.logout()
 #### Initialise the database library
 
 ```js
-const db = frappe.db()
+import { FrappeDB } from 'frappe-js-sdk';
+const db = new FrappeDB(frappe)
 ```
 #### Fetch document using document name
 

@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { FrappeApp } from '../frappe_app';
 import { DBError, FrappeDoc, GetDocListArgs } from './types';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  constructor(appURL: string) {
-    this.appURL = appURL;
+  constructor(app: FrappeApp) {
+    this.appURL = app.url;
   }
 
   /**

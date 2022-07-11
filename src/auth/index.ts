@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { FrappeApp } from '../frappe_app';
 import { AuthCredentials, AuthResponse, AuthError } from './types';
 
 export class FrappeAuth {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  constructor(appURL: string) {
-    this.appURL = appURL;
+  constructor(app: FrappeApp) {
+    this.appURL = app.url;
   }
 
   /** Logs in the user using username and password */

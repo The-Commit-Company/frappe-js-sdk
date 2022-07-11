@@ -38,6 +38,7 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "axios": "^0.26.1"
+    "axios": "^0.26.1",
+    "socket.io-client": "^4.5.1"
   }
 }
