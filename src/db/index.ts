@@ -15,7 +15,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves to the document object
    */
-  async getDoc<T>(doctype: string, docname: string): Promise<T> {
+  async getDoc<T>(doctype: string, docname?: string | null): Promise<T> {
 
     let headers: any = {
       Accept: 'application/json',
@@ -139,7 +139,7 @@ export class FrappeDB {
    * @param {Object} value Contents of the document to update (only the fields that are to be updated)
    * @returns Promise which resolves with the complete document object
    */
-  async updateDoc<T>(doctype: string, docname: string, value: Partial<T>): Promise<FrappeDoc<T>> {
+  async updateDoc<T>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
 
     let headers: any = {
       Accept: 'application/json',
@@ -177,7 +177,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves an object with a message "ok"
    */
-  async deleteDoc<T>(doctype: string, docname: string): Promise<{ message: string }> {
+  async deleteDoc<T>(doctype: string, docname?: string | null): Promise<{ message: string }> {
 
     let headers: any = {
       Accept: 'application/json',
