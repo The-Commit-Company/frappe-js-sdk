@@ -1,5 +1,6 @@
 import { FrappeAuth } from '..';
 import { FrappeDB } from '../db';
+import { FrappeFileUpload } from '../file';
 
 export class FrappeApp {
   /** URL of the Frappe instance */
@@ -20,5 +21,9 @@ export class FrappeApp {
   /** Returns a FrappeDB object for the app */
   db() {
     return new FrappeDB(this.url);
+  }
+
+  file() {
+    return new FrappeFileUpload(this.url);
   }
 }
