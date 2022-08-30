@@ -9,7 +9,7 @@ export class FrappeDB {
     this.appURL = appURL;
   }
 
-  private getRequestURL(doctype: string, docname?: string | null): string {
+  getRequestURL(doctype: string, docname?: string | null): string {
     let requestURL = `${this.appURL}/api/resource/`;
     if (docname) {
       requestURL += `${doctype}/${docname}`;
