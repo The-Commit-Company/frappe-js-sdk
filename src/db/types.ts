@@ -39,10 +39,3 @@ export interface GetDocListArgs {
   /** Fetch documents as a dictionary */
   asDict?: boolean;
 }
-
-export interface DBError {
-  httpStatus: number;
-  httpStatusText: string;
-  message: string;
-  exception: string;
-}

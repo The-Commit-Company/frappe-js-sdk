@@ -1,4 +1,5 @@
 import { FrappeAuth } from '..';
+import { FrappeCall } from '../call';
 import { FrappeDB } from '../db';
 import { FrappeFileUpload } from '../file';
 
@@ -25,5 +26,9 @@ export class FrappeApp {
 
   file() {
     return new FrappeFileUpload(this.url);
+  }
+
+  call() {
+    return new FrappeCall(this.url);
   }
 }

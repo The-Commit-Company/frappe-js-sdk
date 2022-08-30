@@ -1,6 +1,6 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { DBError, FrappeDoc, GetDocListArgs } from './types';
-
+import { FrappeDoc, GetDocListArgs } from './types';
+import { Error } from '../frappe_app/types';
 export class FrappeDB {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
@@ -49,7 +49,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
-        } as DBError;
+        } as Error;
       });
   }
 
@@ -99,7 +99,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the documents.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
-        } as DBError;
+        } as Error;
       });
   }
 
@@ -209,7 +209,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while deleting the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
-        } as DBError;
+        } as Error;
       });
   }
 }

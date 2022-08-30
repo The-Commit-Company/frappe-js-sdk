@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { AuthCredentials, AuthResponse, AuthError } from './types';
-
+import { AuthCredentials, AuthResponse } from './types';
+import { Error } from '../frappe_app/types';
 export class FrappeAuth {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
@@ -34,7 +34,7 @@ export class FrappeAuth {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging in',
           exception: error.response.data.exception ?? '',
-        } as AuthError;
+        } as Error;
       });
   }
 
@@ -55,7 +55,7 @@ export class FrappeAuth {
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the logged in user',
           exception: error.response.data.exception ?? '',
-        } as AuthError;
+        } as Error;
       });
   }
   /** Logs the user out */
@@ -81,7 +81,7 @@ export class FrappeAuth {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging out',
           exception: error.response.data.exception ?? '',
-        } as AuthError;
+        } as Error;
       });
   }
 }
