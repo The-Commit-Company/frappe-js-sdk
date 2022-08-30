@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { GetFileArgs } from './types';
 
 export class FrappeFileUpload {
@@ -18,7 +18,7 @@ export class FrappeFileUpload {
      */
     async uploadFile(file: File, args: GetFileArgs, onProgress?: (bytesUploaded: number, totalBytes: number) => void) {
 
-        let formData = new FormData()
+        const formData = new FormData()
         if (file)
             formData.append('file', file, file.name)
 
@@ -38,7 +38,7 @@ export class FrappeFileUpload {
             formData.append('docname', docname);
         }
 
-        let headers: any = {
+        const headers: AxiosRequestHeaders = {
             Accept: 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
             'X-Frappe-Site-Name': window.location.hostname
@@ -51,7 +51,7 @@ export class FrappeFileUpload {
         return axios.post(`${this.appURL}/api/method/upload_file`,
             formData,
             {
-                headers: headers,
+                headers,
                 onUploadProgress: (progressEvent) => {
                     if (onProgress) {
                         onProgress(progressEvent.loaded, progressEvent.total);
