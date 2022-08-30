@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { DBError, FrappeDoc, GetDocListArgs } from './types';
 
 export class FrappeDB {
@@ -9,6 +9,17 @@ export class FrappeDB {
     this.appURL = appURL;
   }
 
+  private getRequestURL(doctype: string, docname?: string | null): string {
+    let requestURL = `${this.appURL}/api/resource/`
+    if (docname) {
+      requestURL += `${doctype}/${docname}`
+    } else {
+      requestURL += `${doctype}`
+    }
+
+    return requestURL
+  }
+
   /**
    * Get a document from the database
    * @param {string} doctype Name of the doctype
@@ -17,7 +28,7 @@ export class FrappeDB {
    */
   async getDoc<T>(doctype: string, docname?: string | null): Promise<T> {
 
-    let headers: any = {
+    const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       'X-Frappe-Site-Name': window.location.hostname
@@ -27,9 +38,11 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.get(`${this.appURL}/api/resource/${doctype}/${docname}`,
+
+
+    return axios.get(this.getRequestURL(doctype, docname),
       {
-        headers: headers,
+        headers,
         withCredentials: true
       })
       .then((res) => res.data.data)
@@ -68,7 +81,7 @@ export class FrappeDB {
       };
     }
 
-    let headers: any = {
+    const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       'X-Frappe-Site-Name': window.location.hostname
@@ -78,10 +91,10 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.get(`${this.appURL}/api/resource/${doctype}`,
+    return axios.get(this.getRequestURL(doctype),
       {
         params,
-        headers: headers,
+        headers,
         withCredentials: true
       })
       .then((res) => res.data.data)
@@ -103,7 +116,7 @@ export class FrappeDB {
    */
   async createDoc<T>(doctype: string, value: T): Promise<FrappeDoc<T>> {
 
-    let headers: any = {
+    const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       'X-Frappe-Site-Name': window.location.hostname
@@ -113,12 +126,12 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.post(`${this.appURL}/api/resource/${doctype}`,
+    return axios.post(this.getRequestURL(doctype),
       {
         ...value,
       },
       {
-        headers: headers,
+        headers,
         withCredentials: true
       })
       .then((res) => res.data.data)
@@ -141,7 +154,7 @@ export class FrappeDB {
    */
   async updateDoc<T>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
 
-    let headers: any = {
+    const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       'X-Frappe-Site-Name': window.location.hostname
@@ -151,12 +164,12 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.put(`${this.appURL}/api/resource/${doctype}/${docname}`,
+    return axios.put(this.getRequestURL(doctype, docname),
       {
         ...value,
       },
       {
-        headers: headers,
+        headers,
         withCredentials: true
       })
       .then((res) => res.data.data)
@@ -179,7 +192,7 @@ export class FrappeDB {
    */
   async deleteDoc<T>(doctype: string, docname?: string | null): Promise<{ message: string }> {
 
-    let headers: any = {
+    const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       'X-Frappe-Site-Name': window.location.hostname
@@ -189,9 +202,9 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.delete(`${this.appURL}/api/resource/${doctype}/${docname}`,
+    return axios.delete(this.getRequestURL(doctype, docname),
       {
-        headers: headers,
+        headers,
         withCredentials: true
       })
       .then((res) => res.data)
