@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { GetFileArgs } from './types';
+import { FileArgs } from './types';
 
 export class FrappeFileUpload {
   /** URL of the Frappe App instance */
@@ -12,11 +12,11 @@ export class FrappeFileUpload {
   /**
    * Upload file to database
    * @param {File} file to be uploaded
-   * @param {@type GetFileArgs} args arguments of the file
+   * @param {@type FileArgs} args arguments of the file
    * @param {VoidFunction} onProgress file upload progress
    * @returns Promise which resolves with the file object
    */
-  async uploadFile(file: File, args: GetFileArgs, onProgress?: (bytesUploaded: number, totalBytes: number) => void) {
+  async uploadFile(file: File, args: FileArgs, onProgress?: (bytesUploaded: number, totalBytes: number) => void) {
     const formData = new FormData();
     if (file) formData.append('file', file, file.name);
 

@@ -1,4 +1,4 @@
-export interface GetFileArgs {
+export interface FileArgs {
   /** If the file access is private then set to TRUE */
   isPrivate?: boolean;
   /** Folder the file exists in */
