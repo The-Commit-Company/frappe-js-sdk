@@ -26,7 +26,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves to the document object
    */
-  async getDoc<T>(doctype: string, docname?: string | null): Promise<T> {
+  async getDoc<T>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -186,7 +186,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves an object with a message "ok"
    */
-  async deleteDoc<T>(doctype: string, docname?: string | null): Promise<{ message: string }> {
+  async deleteDoc(doctype: string, docname?: string | null): Promise<{ message: string }> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
