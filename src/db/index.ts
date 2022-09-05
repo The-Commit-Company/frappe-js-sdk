@@ -222,7 +222,7 @@ export class FrappeDB {
    * @returns Promise which resolves a number
    */
   async getCount(doctype: string, filters?: Filter[], cache: boolean = false, debug: boolean = false): Promise<number> {
-    let params: any = {
+    const params: any = {
       doctype,
       debug,
       cache,
