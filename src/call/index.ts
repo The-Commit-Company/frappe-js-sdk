@@ -110,7 +110,7 @@ export class FrappeCall {
     }
 
     /** Makes a DELETE request to the specified endpoint */
-    async delete<T>(path: string): Promise<T> {
+    async delete<T>(path: string, params?: any): Promise<T> {
         const headers: AxiosRequestHeaders = {
             Accept: 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
@@ -125,6 +125,7 @@ export class FrappeCall {
                 `${this.appURL}/api/method/${path}`,
                 {
                     headers,
+                    params,
                     withCredentials: true,
                 },
             )
