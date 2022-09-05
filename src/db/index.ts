@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { FrappeDoc, GetDocListArgs } from './types';
+import { Filter, FrappeDoc, GetDocListArgs } from './types';
 import { Error } from '../frappe_app/types';
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -208,6 +208,53 @@ export class FrappeDB {
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: 'There was an error while deleting the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Gets count of documents from the database for a particular doctype with the given filters
+   * @param {string} doctype Name of the doctype
+   * @param {@type Filter[]} [filters] Filters to be applied in the count query
+   * @param {boolean} [cache] Whether to cache the result or not
+   * @param {boolean} [debug] Whether to print debug messages or not
+   * @returns Promise which resolves a number
+   */
+  async getCount(doctype: string, filters?: Filter[], cache: boolean = false, debug: boolean = false): Promise<number> {
+    let params = {};
+
+    if (filters) {
+      params = {
+        doctype,
+        filters: filters ? JSON.stringify(filters) : undefined,
+        debug,
+        cache
+      };
+    }
+
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios
+      .get(`${this.appURL}/api/method/frappe.client.get_count`, {
+        params,
+        headers,
+        withCredentials: true,
+      })
+      .then((res) => res.data.message)
+      .catch((error) => {
+        throw {
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while getting the count.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
         } as Error;
       });
