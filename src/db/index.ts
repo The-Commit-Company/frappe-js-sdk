@@ -222,15 +222,15 @@ export class FrappeDB {
    * @returns Promise which resolves a number
    */
   async getCount(doctype: string, filters?: Filter[], cache: boolean = false, debug: boolean = false): Promise<number> {
-    let params = {};
+    let params: any = {
+      doctype,
+      debug,
+      cache,
+      filters: []
+    };
 
     if (filters) {
-      params = {
-        doctype,
-        filters: filters ? JSON.stringify(filters) : undefined,
-        debug,
-        cache
-      };
+      params.filters = filters ? JSON.stringify(filters) : undefined
     }
 
     const headers: AxiosRequestHeaders = {
