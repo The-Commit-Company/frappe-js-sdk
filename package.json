@@ -20,7 +20,7 @@
     "url": "git+https://github.com/nikkothari22/frappe-js-sdk.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "@nikkothari22:registry": "https://npm.pkg.github.com",
     "access": "public"
   },
   "keywords": [
