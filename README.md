@@ -18,8 +18,10 @@ The library currently supports the following features:
 - 📄 File upload
 - 🤙🏻 API calls
 
-We plan to add the following in the future:
-🗝 Authentication with OAuth clients
+We plan to add the following features in the future:
+
+- 🗝 Authentication with OAuth clients
+- Support for common functions like `get_last_doc`, `exists` in the database.
 
 The library uses [Axios](https://axios-http.com) under the hood to make API calls to your Frappe backend.
 
