@@ -6,8 +6,8 @@ TypeScript/JavaScript library for a [Frappe Framework](https://frappeframework.c
   <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/maintenance/yes/2022?style=flat-square" /></a>
   <!-- <a href="https://github.com/capawesome-team/capacitor-firebase/actions/workflows/ci.yml"><img src="https://img.shields.io/github/workflow/status/capawesome-team/capacitor-firebase/CI/main?style=flat-square" /></a> -->
   <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/github/license/nikkothari22/frappe-js-sdk?style=flat-square" /></a>
-  [![npm badge](https://img.shields.io/npm/v/frappe-js-sdk?style=flat-square)](https://www.npmjs.com/package/frappe-js-sdk)
-  [![npm downloads](https://img.shields.io/npm/dw/frappe-js-sdk?style=flat-square)](https://www.npmjs.com/package/frappe-js-sdk)
+  <a href="https://www.npmjs.com/package/frappe-js-sdk"><img src="https://img.shields.io/npm/v/frappe-js-sdk?style=flat-square" /></a>
+    ![npm](https://img.shields.io/npm/dw/frappe-js-sdk?style=flat-square)
 
 </p>
 
@@ -30,7 +30,19 @@ The library uses [Axios](https://axios-http.com) under the hood to make API call
 | Maintainer | GitHub                                    | Social                                        |
 | ---------- | ----------------------------------------- | --------------------------------------------- |
 | Nikhil Kothari | [nikkothari22](https://github.com/nikkothari22) | [@nik_kothari22](https://twitter.com/nik_kothari22) |
-| Janhvi Patil | [janhvipatil](https://github.com/janhvipatil) | [@janhvipatil](https://twitter.com/janhvipatil) |
+| Janhvi Patil | [janhvipatil](https://github.com/janhvipatil) | [@janhvipatil_](https://twitter.com/janhvipatil_) |
+
+## Installation
+
+```bash
+npm install frappe-js-sdk
+```
+
+or
+
+```bash
+yarn add frappe-js-sdk
+```
 
 ## Initialising the library
 
