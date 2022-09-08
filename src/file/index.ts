@@ -1,4 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
+import { Error } from '../frappe_app/types';
 import { FileArgs } from './types';
 
 export class FrappeFileUpload {
@@ -23,7 +24,7 @@ export class FrappeFileUpload {
     const { isPrivate, folder, file_url, doctype, docname } = args;
 
     if (isPrivate) {
-      formData.append('is_private', 'TRUE');
+      formData.append('is_private', '1');
     }
     if (folder) {
       formData.append('folder', folder);
@@ -53,6 +54,14 @@ export class FrappeFileUpload {
           onProgress(progressEvent.loaded, progressEvent.total);
         }
       },
-    });
+    })
+      .catch(error => {
+        throw {
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: error.response.data.message ?? 'There was an error while uploading the file.',
+          exception: error.response.data.exception ?? '',
+        } as Error;
+      });
   }
 }
