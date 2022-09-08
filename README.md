@@ -1,18 +1,37 @@
 # frappe-js-sdk
-TypeScript/JavaScript library for Frappe REST API - Work in progress 🚧
+TypeScript/JavaScript library for a [Frappe Framework](https://frappeframework.com) backend.
 
+<br />
+<p align="center">
+  <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/maintenance/yes/2022?style=flat-square" /></a>
+  <!-- <a href="https://github.com/capawesome-team/capacitor-firebase/actions/workflows/ci.yml"><img src="https://img.shields.io/github/workflow/status/capawesome-team/capacitor-firebase/CI/main?style=flat-square" /></a> -->
+  <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/github/license/nikkothari22/frappe-js-sdk?style=flat-square" /></a>
+  [![npm badge](https://img.shields.io/npm/v/frappe-js-sdk?style=flat-square)](https://www.npmjs.com/package/frappe-js-sdk)
+  [![npm downloads](https://img.shields.io/npm/dw/frappe-js-sdk?style=flat-square)](https://www.npmjs.com/package/frappe-js-sdk)
+
+</p>
+
+## Features
 
 The library currently supports the following features:
 
-1. Authentication - login with username and password
-2. Database - Get document, get list of documents, create, update and delete documents
+- 🔐 Authentication - login with username and password
+- 🗄 Database - Get document, get list of documents, get count, create, update and delete documents
+- 📄 File upload
+- 🤙🏻 API calls
 
 We plan to add the following in the future:
-1. Authentication with OAuth clients
-2. File upload
-3. API calls to server scripts
+🗝 Authentication with OAuth clients
 
-The library uses Axios under the hood to make API calls to your Frappe backend.
+The library uses [Axios](https://axios-http.com) under the hood to make API calls to your Frappe backend.
+
+## Maintainers
+
+| Maintainer | GitHub                                    | Social                                        |
+| ---------- | ----------------------------------------- | --------------------------------------------- |
+| Nikhil Kothari | [nikkothari22](https://github.com/nikkothari22) | [@nik_kothari22](https://twitter.com/nik_kothari22) |
+| Janhvi Patil | [janhvipatil](https://github.com/janhvipatil) | [@janhvipatil](https://twitter.com/janhvipatil) |
+
 ## Initialising the library
 
 To get started, initialise the library:
@@ -20,7 +39,7 @@ To get started, initialise the library:
 ```js
 import { FrappeApp } from "frappe-js-sdk";
 //Add your Frappe backend's URL
-const frappe = new FrappeApp("test.frappe.cloud")
+const frappe = new FrappeApp("https://test.frappe.cloud")
 
 ```
 
@@ -111,6 +130,17 @@ db.getDocList("DocType", {
 
 Type declarations are available for the second argument in the source code.
 
+#### Fetch number of documents with filters
+
+```js
+const filters = [["creation", ">", "2021-10-09"]];
+const useCache = true /** Default is false - Optional **/
+const debug = false /** Default is false - Optional **/
+
+db.getCount("DocType", filters, cache, debug)
+    .then(count => console.log(count))
+    .catch(error => console.error(error))
+```
 
 #### Create a document
 To create a new document, pass the name of the DocType and the fields to `createDoc`.
@@ -179,3 +209,111 @@ export type FrappeDoc<T> = T & {
 ```
 
 All document responses are returned as an intersection of `FrappeDoc` and the specified type.
+
+## API Calls
+
+#### Initialise the call library
+
+```ts
+const call = frappe.call()
+```
+
+Make sure all endpoints are whitelisted (`@frappe.whitelist()`) in your backend
+#### GET request
+
+Make a GET request to your endpoint with parameters.
+
+```js
+const searchParams = {
+    doctype: "Currency",
+    txt: "IN"
+}
+call.get('frappe.desk.search_link', searchParams)
+    .then(result => console.log(result))
+    .catch(error => console.error(error))
+```
+#### POST request
+
+Make a POST request to your endpoint with parameters.
+
+```js
+const updatedFields = {
+    "doctype": "User",
+    "name": "Administrator",
+    "fieldname": "interest",
+    "value": "Frappe Framework, ERPNext"
+}
+call.post('frappe.client.set_value', updatedFields)
+    .then(result => console.log(result))
+    .catch(error => console.error(error))
+```
+
+#### PUT request
+
+Make a PUT request to your endpoint with parameters.
+
+```js
+const updatedFields = {
+    "doctype": "User",
+    "name": "Administrator",
+    "fieldname": "interest",
+    "value": "Frappe Framework, ERPNext"
+}
+call.put('frappe.client.set_value', updatedFields)
+    .then(result => console.log(result))
+    .catch(error => console.error(error))
+```
+
+#### DELETE request
+
+Make a DELETE request to your endpoint with parameters.
+
+```js
+const documentToBeDeleted = {
+    "doctype": "Tag",
+    "name": "Random Tag",
+}
+call.put('frappe.client.delete', documentToBeDeleted)
+    .then(result => console.log(result))
+    .catch(error => console.error(error))
+```
+
+## File Uploads
+
+#### Initialise the file library
+
+```ts
+const file = frappe.file()
+```
+
+#### Upload a file with on progress callback
+
+```js
+const myFile; //Your File object
+
+const fileArgs = {
+  /** If the file access is private then set to TRUE (optional) */
+  "isPrivate": true,
+  /** Folder the file exists in (optional) */
+  "folder": "Home",
+  /** File URL (optional) */
+  "file_url": "",
+  /** Doctype associated with the file (optional) */
+  "doctype": "User",
+  /** Docname associated with the file (mandatory if doctype is present) */
+  "docname": "Administrator"
+}
+
+file.uploadFile(
+            myFile, 
+            fileArgs, 
+            /** Progress Indicator callback function **/
+            (completedBytes, totalBytes) => console.log(Math.round((c / t) * 100), " completed")
+        )
+        .then(() => console.log("File Upload complete"))
+        .catch(e => console.error(e))
+```
+
+## License
+
+See [LICENSE](./LICENSE).
