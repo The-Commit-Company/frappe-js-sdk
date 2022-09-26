@@ -20,6 +20,15 @@ export type FrappeDoc<T> = T & {
   /** The primary key of the DocType table */
   name: string;
 };
+
+export interface GetLastDocArgs {
+  filters?: Filter[];
+  orFilters?: Filter[];
+  orderBy?: {
+    field: string;
+    order?: 'asc' | 'desc';
+  };
+}
 export interface GetDocListArgs {
   /** Fields to be fetched */
   fields?: string[];
