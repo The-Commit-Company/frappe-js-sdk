@@ -71,7 +71,7 @@ export class FrappeDB {
       }
     }
 
-    const getDocLists = await this.getDocList<T & { name?: string }>(doctype, { ...args, limit: 1 });
+    const getDocLists = await this.getDocList<{ name: string }>(doctype, { ...args, limit: 1 });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
