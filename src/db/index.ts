@@ -262,22 +262,24 @@ export class FrappeDB {
   /**
    * Get a document from the database
    * @param {string} doctype Name of the doctype
-   * @param {@type GetDocArgs} [args] Arguments for the query
+   * @param {@type GetLastDocArgs} [args] Arguments for the query
    * @returns Promise which resolves to the document object
    */
   async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
-
-    if (!args || !args?.orderBy) {
-      args = {
-        ...args,
-        orderBy: {
-          field: 'creation',
-          order: 'desc'
-        }
+    let queryArgs: GetLastDocArgs = {
+      orderBy: {
+        field: 'creation',
+        order: 'desc'
+      }
+    };
+    if (args) {
+      queryArgs = {
+        ...queryArgs,
+        ...args
       }
     }
 
-    const getDocLists = await this.getDocList<T & { name?: string }>(doctype, { ...args, limit: 1 });
+    const getDocLists = await this.getDocList<{ name?: string }>(doctype, { ...queryArgs, limit: 1 });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
