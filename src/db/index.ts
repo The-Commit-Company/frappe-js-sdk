@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { Filter, FrappeDoc, GetDocListArgs } from './types';
+import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
 import { Error } from '../frappe_app/types';
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -259,4 +259,31 @@ export class FrappeDB {
         } as Error;
       });
   }
+  /**
+   * Get a document from the database
+   * @param {string} doctype Name of the doctype
+   * @param {@type GetLastDocArgs} [args] Arguments for the query
+   * @returns Promise which resolves to the document object
+   */
+  async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
+    let queryArgs: GetLastDocArgs = {
+      orderBy: {
+        field: 'creation',
+        order: 'desc'
+      }
+    };
+    if (args) {
+      queryArgs = {
+        ...queryArgs,
+        ...args
+      }
+    }
+
+    const getDocLists = await this.getDocList<{ name?: string }>(doctype, { ...queryArgs, limit: 1 });
+    if (getDocLists.length > 0) {
+      return this.getDoc<T>(doctype, getDocLists[0].name);
+    }
+
+    return {} as FrappeDoc<T>;
+  };
 }
