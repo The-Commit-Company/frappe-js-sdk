@@ -54,33 +54,6 @@ export class FrappeDB {
   }
 
   /**
-   * Get the last document from the database. 
-   * By default, it will get the last created document.
-   * @param {string} doctype Name of the doctype
-   * @param {@type GetLastDocArgs} [args] Arguments for the query - can set filters and ordering.
-   * @returns Promise which resolves to the document object
-   */
-  async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
-
-    if (!args || !args?.orderBy) {
-      args = {
-        ...args,
-        orderBy: {
-          field: 'creation',
-          order: 'desc'
-        }
-      }
-    }
-
-    const getDocLists = await this.getDocList<{ name: string }>(doctype, { ...args, limit: 1 });
-    if (getDocLists.length > 0) {
-      return this.getDoc<T>(doctype, getDocLists[0].name);
-    }
-
-    return {} as FrappeDoc<T>;
-  };
-
-  /**
    * Gets a list of documents from the database for a particular doctype. Add filters, sorting order and pagination to get a filtered and sorted list of documents.
    * @param {string} doctype Name of the doctype
    * @param {@type GetDocListArgs} [args] Arguments for the query
@@ -286,4 +259,29 @@ export class FrappeDB {
         } as Error;
       });
   }
+  /**
+   * Get a document from the database
+   * @param {string} doctype Name of the doctype
+   * @param {@type GetDocArgs} [args] Arguments for the query
+   * @returns Promise which resolves to the document object
+   */
+  async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
+
+    if (!args || !args?.orderBy) {
+      args = {
+        ...args,
+        orderBy: {
+          field: 'creation',
+          order: 'desc'
+        }
+      }
+    }
+
+    const getDocLists = await this.getDocList<T & { name?: string }>(doctype, { ...args, limit: 1 });
+    if (getDocLists.length > 0) {
+      return this.getDoc<T>(doctype, getDocLists[0].name);
+    }
+
+    return {} as FrappeDoc<T>;
+  };
 }
