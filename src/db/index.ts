@@ -57,7 +57,7 @@ export class FrappeDB {
    * Get the last document from the database. 
    * By default, it will get the last created document.
    * @param {string} doctype Name of the doctype
-   * @param {@type GetDocArgs} [args] Arguments for the query
+   * @param {@type GetLastDocArgs} [args] Arguments for the query - can set filters and ordering.
    * @returns Promise which resolves to the document object
    */
   async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
