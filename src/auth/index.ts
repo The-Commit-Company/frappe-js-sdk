@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { AuthCredentials, AuthResponse } from './types';
 import { Error } from '../frappe_app/types';
 export class FrappeAuth {
@@ -12,6 +12,17 @@ export class FrappeAuth {
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
     const { username, password } = credentials;
+
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .post(
         `${this.appURL}/api/method/login`,
@@ -20,10 +31,7 @@ export class FrappeAuth {
           pwd: password,
         },
         {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers,
           withCredentials: true,
         },
       )
@@ -40,12 +48,20 @@ export class FrappeAuth {
 
   /** Gets the currently logged in user */
   async getLoggedInUser(): Promise<string> {
+
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .get(`${this.appURL}/api/method/frappe.auth.get_logged_user`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
+        headers,
         withCredentials: true,
       })
       .then((res) => res.data.message)
@@ -60,15 +76,23 @@ export class FrappeAuth {
   }
   /** Logs the user out */
   async logout(): Promise<void> {
+
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .post(
         `${this.appURL}/api/method/logout`,
         {},
         {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers,
           withCredentials: true,
         },
       )
