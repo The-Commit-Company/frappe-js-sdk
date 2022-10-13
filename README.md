@@ -313,7 +313,9 @@ const fileArgs = {
   /** Doctype associated with the file (optional) */
   "doctype": "User",
   /** Docname associated with the file (mandatory if doctype is present) */
-  "docname": "Administrator"
+  "docname": "Administrator",
+  /** Field in the document it is linked to */
+  "fieldname": "image";
 }
 
 file.uploadFile(
