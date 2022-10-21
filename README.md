@@ -27,10 +27,10 @@ The library uses [Axios](https://axios-http.com) under the hood to make API call
 
 ## Maintainers
 
-| Maintainer | GitHub                                    | Social                                        |
-| ---------- | ----------------------------------------- | --------------------------------------------- |
+| Maintainer     | GitHub                                          | Social                                              |
+| -------------- | ----------------------------------------------- | --------------------------------------------------- |
 | Nikhil Kothari | [nikkothari22](https://github.com/nikkothari22) | [@nik_kothari22](https://twitter.com/nik_kothari22) |
-| Janhvi Patil | [janhvipatil](https://github.com/janhvipatil) | [@janhvipatil_](https://twitter.com/janhvipatil_) |
+| Janhvi Patil   | [janhvipatil](https://github.com/janhvipatil)   | [@janhvipatil_](https://twitter.com/janhvipatil_)   |
 
 ## Installation
 
@@ -322,7 +322,9 @@ const fileArgs = {
   /** Doctype associated with the file (optional) */
   "doctype": "User",
   /** Docname associated with the file (mandatory if doctype is present) */
-  "docname": "Administrator"
+  "docname": "Administrator",
+  /** Field in the document **/
+  "fieldname": "image"
 }
 
 file.uploadFile(
