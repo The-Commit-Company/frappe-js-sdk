@@ -90,6 +90,15 @@ auth.logout()
     .catch(error => console.error(error))
 ```
 
+#### Forget Password
+
+This makes an API sends a password reset link to the specified email address.
+```js
+auth.forgetPassword("example@example.com")
+    .then(() => console.log("Password Reset Email Sent!"))
+    .catch(() => console.error("We couldn't find your account."))
+```
+
 
 ## Database
 

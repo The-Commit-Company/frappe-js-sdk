@@ -226,11 +226,11 @@ export class FrappeDB {
       doctype,
       debug,
       cache,
-      filters: []
+      filters: [],
     };
 
     if (filters) {
-      params.filters = filters ? JSON.stringify(filters) : undefined
+      params.filters = filters ? JSON.stringify(filters) : undefined;
     }
 
     const headers: AxiosRequestHeaders = {
@@ -269,14 +269,14 @@ export class FrappeDB {
     let queryArgs: GetLastDocArgs = {
       orderBy: {
         field: 'creation',
-        order: 'desc'
-      }
+        order: 'desc',
+      },
     };
     if (args) {
       queryArgs = {
         ...queryArgs,
-        ...args
-      }
+        ...args,
+      };
     }
 
     const getDocLists = await this.getDocList<{ name?: string }>(doctype, { ...queryArgs, limit: 1 });
@@ -285,5 +285,5 @@ export class FrappeDB {
     }
 
     return {} as FrappeDoc<T>;
-  };
+  }
 }

@@ -47,15 +47,16 @@ export class FrappeFileUpload {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.post(`${this.appURL}/api/method/upload_file`, formData, {
-      headers,
-      onUploadProgress: (progressEvent) => {
-        if (onProgress) {
-          onProgress(progressEvent.loaded, progressEvent.total);
-        }
-      },
-    })
-      .catch(error => {
+    return axios
+      .post(`${this.appURL}/api/method/upload_file`, formData, {
+        headers,
+        onUploadProgress: (progressEvent) => {
+          if (onProgress) {
+            onProgress(progressEvent.loaded, progressEvent.total);
+          }
+        },
+      })
+      .catch((error) => {
         throw {
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
