@@ -9,4 +9,6 @@ export interface FileArgs {
   doctype?: string;
   /** Docname associated with the file */
   docname?: string;
+  /** Field to be linked in the Document */
+  fieldname?: string;
 }
