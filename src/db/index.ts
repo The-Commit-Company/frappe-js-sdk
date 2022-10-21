@@ -26,7 +26,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves to the document object
    */
-  async getDoc<T>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
+  async getDoc<T = any>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -59,7 +59,7 @@ export class FrappeDB {
    * @param {@type GetDocListArgs} [args] Arguments for the query
    * @returns Promise which resolves to an array of documents
    */
-  async getDocList<T>(doctype: string, args?: GetDocListArgs): Promise<T[]> {
+  async getDocList<T = any>(doctype: string, args?: GetDocListArgs): Promise<T[]> {
     let params = {};
 
     if (args) {
@@ -108,7 +108,7 @@ export class FrappeDB {
    * @param {Object} value Contents of the document
    * @returns Promise which resolves with the complete document object
    */
-  async createDoc<T>(doctype: string, value: T): Promise<FrappeDoc<T>> {
+  async createDoc<T = any>(doctype: string, value: T): Promise<FrappeDoc<T>> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -147,7 +147,7 @@ export class FrappeDB {
    * @param {Object} value Contents of the document to update (only the fields that are to be updated)
    * @returns Promise which resolves with the complete document object
    */
-  async updateDoc<T>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
+  async updateDoc<T = any>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -265,7 +265,7 @@ export class FrappeDB {
    * @param {@type GetLastDocArgs} [args] Arguments for the query
    * @returns Promise which resolves to the document object
    */
-  async getLastDoc<T>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
+  async getLastDoc<T = any>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
     let queryArgs: GetLastDocArgs = {
       orderBy: {
         field: 'creation',

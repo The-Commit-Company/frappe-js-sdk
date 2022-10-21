@@ -9,7 +9,7 @@ export class FrappeCall {
   }
 
   /** Makes a GET request to the specified endpoint */
-  async get<T>(path: string, params?: Record<string, any>): Promise<T> {
+  async get<T = any>(path: string, params?: Record<string, any>): Promise<T> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -38,7 +38,7 @@ export class FrappeCall {
   }
 
   /** Makes a POST request to the specified endpoint */
-  async post<T>(path: string, params?: any): Promise<T> {
+  async post<T = any>(path: string, params?: any): Promise<T> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -72,7 +72,7 @@ export class FrappeCall {
   }
 
   /** Makes a PUT request to the specified endpoint */
-  async put<T>(path: string, params?: any): Promise<T> {
+  async put<T = any>(path: string, params?: any): Promise<T> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -105,7 +105,7 @@ export class FrappeCall {
   }
 
   /** Makes a DELETE request to the specified endpoint */
-  async delete<T>(path: string, params?: any): Promise<T> {
+  async delete<T = any>(path: string, params?: any): Promise<T> {
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
