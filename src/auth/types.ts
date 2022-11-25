@@ -1,6 +1,7 @@
 export interface AuthCredentials {
   username: string;
   password: string;
+  device?: string;
 }
 
 export interface AuthResponse {
