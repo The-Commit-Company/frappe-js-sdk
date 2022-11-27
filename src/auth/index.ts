@@ -12,7 +12,7 @@ export class FrappeAuth {
 
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
-    const { username, password } = credentials;
+    const { username, password, device } = credentials;
 
     const headers: AxiosRequestHeaders = {
       Accept: 'application/json',
@@ -30,6 +30,7 @@ export class FrappeAuth {
         {
           usr: username,
           pwd: password,
+          device,
         },
         {
           headers,
