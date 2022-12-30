@@ -21,7 +21,7 @@ export class FrappeFileUpload {
     const formData = new FormData();
     if (file) formData.append('file', file, file.name);
 
-    const { isPrivate, folder, file_url, doctype, docname } = args;
+    const { isPrivate, folder, file_url, doctype, docname, fieldname } = args;
 
     if (isPrivate) {
       formData.append('is_private', '1');
@@ -35,6 +35,9 @@ export class FrappeFileUpload {
     if (doctype && docname) {
       formData.append('doctype', doctype);
       formData.append('docname', docname);
+      if (fieldname) {
+        formData.append('fieldname', fieldname);
+      }
     }
 
     const headers: AxiosRequestHeaders = {
@@ -47,15 +50,16 @@ export class FrappeFileUpload {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    return axios.post(`${this.appURL}/api/method/upload_file`, formData, {
-      headers,
-      onUploadProgress: (progressEvent) => {
-        if (onProgress) {
-          onProgress(progressEvent.loaded, progressEvent.total);
-        }
-      },
-    })
-      .catch(error => {
+    return axios
+      .post(`${this.appURL}/api/method/upload_file`, formData, {
+        headers,
+        onUploadProgress: (progressEvent) => {
+          if (onProgress) {
+            onProgress(progressEvent.loaded, progressEvent.total);
+          }
+        },
+      })
+      .catch((error) => {
         throw {
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,

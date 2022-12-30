@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { AuthCredentials, AuthResponse } from './types';
 import { Error } from '../frappe_app/types';
+
 export class FrappeAuth {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
@@ -11,19 +12,28 @@ export class FrappeAuth {
 
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
-    const { username, password } = credentials;
+    const { username, password, device } = credentials;
+
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .post(
         `${this.appURL}/api/method/login`,
         {
           usr: username,
           pwd: password,
+          device,
         },
         {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers,
           withCredentials: true,
         },
       )
@@ -40,12 +50,19 @@ export class FrappeAuth {
 
   /** Gets the currently logged in user */
   async getLoggedInUser(): Promise<string> {
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .get(`${this.appURL}/api/method/frappe.auth.get_logged_user`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
+        headers,
         withCredentials: true,
       })
       .then((res) => res.data.message)
@@ -58,17 +75,25 @@ export class FrappeAuth {
         } as Error;
       });
   }
+
   /** Logs the user out */
   async logout(): Promise<void> {
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
     return axios
       .post(
         `${this.appURL}/api/method/logout`,
         {},
         {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers,
           withCredentials: true,
         },
       )
@@ -80,6 +105,43 @@ export class FrappeAuth {
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging out',
+          exception: error.response.data.exception ?? '',
+        } as Error;
+      });
+  }
+
+  /** Sends password reset email */
+  async forgetPassword(user: string): Promise<void> {
+    const headers: AxiosRequestHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Frappe-Site-Name': window.location.hostname,
+    };
+
+    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    return axios
+      .post(
+        `${this.appURL}`,
+        {
+          cmd: 'frappe.core.doctype.user.user.reset_password',
+          user,
+        },
+        {
+          headers,
+          withCredentials: true,
+        },
+      )
+      .then(() => {
+        return;
+      })
+      .catch((error) => {
+        throw {
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: error.response.data.message ?? 'There was an error sending password reset email.',
           exception: error.response.data.exception ?? '',
         } as Error;
       });
