@@ -71,7 +71,7 @@ export class FrappeDB {
         or_filters: orFilters ? JSON.stringify(orFilters) : undefined,
         order_by: orderByString,
         limit,
-        limit_start: limit_start,
+        limit_start,
         as_dict: asDict,
       };
     }
