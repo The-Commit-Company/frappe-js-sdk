@@ -224,11 +224,16 @@ export class FrappeDB {
   async getCount(doctype: string, filters?: Filter[], cache: boolean = false, debug: boolean = false): Promise<number> {
     const params: any = {
       doctype,
-      debug,
-      cache,
       filters: [],
     };
 
+    if (cache) {
+      params.cache = cache;
+    }
+
+    if (debug) {
+      params.debug = debug;
+    }
     if (filters) {
       params.filters = filters ? JSON.stringify(filters) : undefined;
     }
