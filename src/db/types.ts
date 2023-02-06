@@ -45,7 +45,7 @@ export interface GetDocListArgs {
     field: string;
     order?: 'asc' | 'desc';
   };
-  /** Group by the result */
+  /** Group the results by particular field */
   groupBy?: string;
   /** Fetch documents as a dictionary */
   asDict?: boolean;
