@@ -142,6 +142,8 @@ db.getDocList("DocType", {
             field: "creation",
             order: 'desc'
         },
+        /** Group the results by particular field */
+        groupBy: "name",
         /** Fetch documents as a dictionary */
         asDict: false
     })
