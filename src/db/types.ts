@@ -1,4 +1,4 @@
-type FilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'in' | 'like' | 'between';
+type FilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'in' | 'like' | 'between' | '!=';
 type Value = string | number | boolean | Date | null;
 export type Filter = [string, FilterOperator, Value | Value[]];
 
