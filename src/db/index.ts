@@ -1,18 +1,20 @@
 import axios, { AxiosRequestHeaders } from 'axios';
 import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
 import { Error } from '../frappe_app/types';
+import { getRequestHeaders } from '../utils';
+
 export class FrappeDB {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  /** Whether to use the token from the window object */
+  /** Whether to use the token based auth */
   readonly useToken: boolean;
 
   /** Token to be used for authentication */
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
-  readonly tokenType?: 'Bearer' | 'token'
+  readonly tokenType?: 'Bearer' | 'token';
 
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
@@ -32,6 +34,10 @@ export class FrappeDB {
     return requestURL;
   }
 
+  private getPreparedRequestHeaders(): AxiosRequestHeaders {
+    return getRequestHeaders(this.useToken, this.tokenType, this.token);
+  }
+
   /**
    * Get a document from the database
    * @param {string} doctype Name of the doctype
@@ -39,19 +45,7 @@ export class FrappeDB {
    * @returns Promise which resolves to the document object
    */
   async getDoc<T = any>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .get(this.getRequestURL(doctype, docname), {
@@ -93,19 +87,7 @@ export class FrappeDB {
       };
     }
 
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .get(this.getRequestURL(doctype), {
@@ -130,19 +112,7 @@ export class FrappeDB {
    * @returns Promise which resolves with the complete document object
    */
   async createDoc<T = any>(doctype: string, value: T): Promise<FrappeDoc<T>> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .post(
@@ -173,19 +143,7 @@ export class FrappeDB {
    * @returns Promise which resolves with the complete document object
    */
   async updateDoc<T = any>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .put(
@@ -216,19 +174,7 @@ export class FrappeDB {
    * @returns Promise which resolves an object with a message "ok"
    */
   async deleteDoc(doctype: string, docname?: string | null): Promise<{ message: string }> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .delete(this.getRequestURL(doctype, docname), {
@@ -271,19 +217,7 @@ export class FrappeDB {
       params.filters = filters ? JSON.stringify(filters) : undefined;
     }
 
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .get(`${this.appURL}/api/method/frappe.client.get_count`, {
