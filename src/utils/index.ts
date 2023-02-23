@@ -1,7 +1,7 @@
 import { AxiosRequestHeaders } from 'axios';
 
 export function getRequestHeaders(
-  useToken: Boolean = false,
+  useToken: boolean = false,
   tokenType?: 'Bearer' | 'token',
   token?: () => string,
 ): AxiosRequestHeaders {
