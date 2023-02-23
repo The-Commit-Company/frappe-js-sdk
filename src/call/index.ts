@@ -1,10 +1,13 @@
 import { AxiosInstance } from 'axios';
+
 import { Error } from '../frappe_app/types';
-import { getAxiosClient } from '../utils/axios';
 
 export class FrappeCall {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
+
+  /** Axios instance */
+  readonly axios: AxiosInstance;
 
   /** Whether to use the token based auth */
   readonly useToken: boolean;
@@ -15,15 +18,18 @@ export class FrappeCall {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
-  /** Axios instance */
-  private readonly axios: AxiosInstance;
-
-  constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
+  constructor(
+    appURL: string,
+    axios: AxiosInstance,
+    useToken?: boolean,
+    token?: () => string,
+    tokenType?: 'Bearer' | 'token',
+  ) {
     this.appURL = appURL;
+    this.axios = axios;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
-    this.axios = getAxiosClient(this.appURL, this.useToken, this.token, this.tokenType);
   }
 
   /** Makes a GET request to the specified endpoint */
