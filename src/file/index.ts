@@ -1,25 +1,30 @@
-import axios, { AxiosRequestHeaders } from 'axios';
-import { Error } from '../frappe_app/types';
 import { FileArgs } from './types';
+import { Error } from '../frappe_app/types';
+import { getRequestHeaders } from '../utils';
+import axios, { AxiosRequestHeaders } from 'axios';
 
 export class FrappeFileUpload {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  /** Whether to use the token from the window object */
+  /** Whether to use the token based auth */
   readonly useToken: boolean;
 
   /** Token to be used for authentication */
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
-  readonly tokenType?: 'Bearer' | 'token'
+  readonly tokenType?: 'Bearer' | 'token';
 
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
+  }
+
+  private getPreparedRequestHeaders(): AxiosRequestHeaders {
+    return getRequestHeaders(this.useToken, this.tokenType, this.token);
   }
 
   /**
@@ -52,19 +57,7 @@ export class FrappeFileUpload {
       }
     }
 
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .post(`${this.appURL}/api/method/upload_file`, formData, {

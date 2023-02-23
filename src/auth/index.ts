@@ -1,19 +1,20 @@
+import { Error } from '../frappe_app/types';
+import { getRequestHeaders } from '../utils';
 import axios, { AxiosRequestHeaders } from 'axios';
 import { AuthCredentials, AuthResponse } from './types';
-import { Error } from '../frappe_app/types';
 
 export class FrappeAuth {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  /** Whether to use the token from the window object */
+  /** Whether to use the token based auth */
   readonly useToken: boolean;
 
   /** Token to be used for authentication */
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
-  readonly tokenType?: 'Bearer' | 'token'
+  readonly tokenType?: 'Bearer' | 'token';
 
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
@@ -22,19 +23,15 @@ export class FrappeAuth {
     this.tokenType = tokenType;
   }
 
+  private getPreparedRequestHeaders(): AxiosRequestHeaders {
+    return getRequestHeaders(this.useToken, this.tokenType, this.token);
+  }
+
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
     const { username, password, device } = credentials;
 
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .post(
@@ -62,19 +59,7 @@ export class FrappeAuth {
 
   /** Gets the currently logged in user */
   async getLoggedInUser(): Promise<string> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
-
-    if (this.useToken && this.tokenType && this.token) {
-      headers.Authorization = `${this.tokenType} ${this.token()}`;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .get(`${this.appURL}/api/method/frappe.auth.get_logged_user`, {
@@ -94,15 +79,7 @@ export class FrappeAuth {
 
   /** Logs the user out */
   async logout(): Promise<void> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .post(
@@ -128,15 +105,7 @@ export class FrappeAuth {
 
   /** Sends password reset email */
   async forgetPassword(user: string): Promise<void> {
-    const headers: AxiosRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'X-Frappe-Site-Name': window.location.hostname,
-    };
-
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
-    }
+    const headers = this.getPreparedRequestHeaders();
 
     return axios
       .post(
