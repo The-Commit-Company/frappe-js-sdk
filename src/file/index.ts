@@ -1,7 +1,7 @@
 import { FileArgs } from './types';
 import { Error } from '../frappe_app/types';
-import { getRequestHeaders } from '../utils';
-import axios, { AxiosRequestHeaders } from 'axios';
+import { getAxiosClient } from '../utils/axios';
+import { AxiosInstance } from 'axios';
 
 export class FrappeFileUpload {
   /** URL of the Frappe App instance */
@@ -16,15 +16,15 @@ export class FrappeFileUpload {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
+  /** Axios instance */
+  private readonly axios: AxiosInstance;
+
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
-  }
-
-  private getPreparedRequestHeaders(): AxiosRequestHeaders {
-    return getRequestHeaders(this.useToken, this.tokenType, this.token);
+    this.axios = getAxiosClient(this.appURL, this.useToken, this.token, this.tokenType);
   }
 
   /**
@@ -57,11 +57,8 @@ export class FrappeFileUpload {
       }
     }
 
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .post(`${this.appURL}/api/method/upload_file`, formData, {
-        headers,
+    return this.axios
+      .post('/api/method/upload_file', formData, {
         onUploadProgress: (progressEvent) => {
           if (onProgress) {
             onProgress(progressEvent.loaded, progressEvent.total);

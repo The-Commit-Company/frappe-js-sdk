@@ -1,7 +1,7 @@
-import axios, { AxiosRequestHeaders } from 'axios';
+import { AxiosInstance } from 'axios';
 import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
 import { Error } from '../frappe_app/types';
-import { getRequestHeaders } from '../utils';
+import { getAxiosClient } from '../utils/axios';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -16,26 +16,15 @@ export class FrappeDB {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
+  /** Axios instance */
+  private readonly axios: AxiosInstance;
+
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
-  }
-
-  getRequestURL(doctype: string, docname?: string | null): string {
-    let requestURL = `${this.appURL}/api/resource/`;
-    if (docname) {
-      requestURL += `${doctype}/${docname}`;
-    } else {
-      requestURL += `${doctype}`;
-    }
-
-    return requestURL;
-  }
-
-  private getPreparedRequestHeaders(): AxiosRequestHeaders {
-    return getRequestHeaders(this.useToken, this.tokenType, this.token);
+    this.axios = getAxiosClient(this.appURL, this.useToken, this.token, this.tokenType);
   }
 
   /**
@@ -45,13 +34,8 @@ export class FrappeDB {
    * @returns Promise which resolves to the document object
    */
   async getDoc<T = any>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .get(this.getRequestURL(doctype, docname), {
-        headers,
-        withCredentials: true,
-      })
+    return this.axios
+      .get(`/api/resource/${doctype}/${docname}`)
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -87,14 +71,8 @@ export class FrappeDB {
       };
     }
 
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .get(this.getRequestURL(doctype), {
-        params,
-        headers,
-        withCredentials: true,
-      })
+    return this.axios
+      .get(`/api/resource/${doctype}`, { params })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -112,19 +90,8 @@ export class FrappeDB {
    * @returns Promise which resolves with the complete document object
    */
   async createDoc<T = any>(doctype: string, value: T): Promise<FrappeDoc<T>> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .post(
-        this.getRequestURL(doctype),
-        {
-          ...value,
-        },
-        {
-          headers,
-          withCredentials: true,
-        },
-      )
+    return this.axios
+      .post(`/api/resource/${doctype}`, { ...value })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -143,19 +110,8 @@ export class FrappeDB {
    * @returns Promise which resolves with the complete document object
    */
   async updateDoc<T = any>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .put(
-        this.getRequestURL(doctype, docname),
-        {
-          ...value,
-        },
-        {
-          headers,
-          withCredentials: true,
-        },
-      )
+    return this.axios
+      .put(`/api/resource/${doctype}/${docname}`, { ...value })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -174,13 +130,8 @@ export class FrappeDB {
    * @returns Promise which resolves an object with a message "ok"
    */
   async deleteDoc(doctype: string, docname?: string | null): Promise<{ message: string }> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .delete(this.getRequestURL(doctype, docname), {
-        headers,
-        withCredentials: true,
-      })
+    return this.axios
+      .delete(`/api/resource/${doctype}/${docname}`)
       .then((res) => res.data)
       .catch((error) => {
         throw {
@@ -217,14 +168,8 @@ export class FrappeDB {
       params.filters = filters ? JSON.stringify(filters) : undefined;
     }
 
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .get(`${this.appURL}/api/method/frappe.client.get_count`, {
-        params,
-        headers,
-        withCredentials: true,
-      })
+    return this.axios
+      .get('/api/method/frappe.client.get_count', { params })
       .then((res) => res.data.message)
       .catch((error) => {
         throw {

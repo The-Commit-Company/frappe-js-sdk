@@ -18,7 +18,7 @@ export class FrappeApp {
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
-  readonly tokenType?: 'Bearer' | 'token'
+  readonly tokenType?: 'Bearer' | 'token';
 
   constructor(url: string, tokenParams: TokenParams, name?: string) {
     this.url = url;

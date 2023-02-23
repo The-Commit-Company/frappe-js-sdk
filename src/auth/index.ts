@@ -1,6 +1,6 @@
 import { Error } from '../frappe_app/types';
-import { getRequestHeaders } from '../utils';
-import axios, { AxiosRequestHeaders } from 'axios';
+import { getAxiosClient } from '../utils/axios';
+import { AxiosInstance } from 'axios';
 import { AuthCredentials, AuthResponse } from './types';
 
 export class FrappeAuth {
@@ -16,36 +16,27 @@ export class FrappeAuth {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
+  /** Axios instance */
+  private readonly axios: AxiosInstance;
+
   constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
-  }
-
-  private getPreparedRequestHeaders(): AxiosRequestHeaders {
-    return getRequestHeaders(this.useToken, this.tokenType, this.token);
+    this.axios = getAxiosClient(this.appURL, this.useToken, this.token, this.tokenType);
   }
 
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
     const { username, password, device } = credentials;
 
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .post(
-        `${this.appURL}/api/method/login`,
-        {
-          usr: username,
-          pwd: password,
-          device,
-        },
-        {
-          headers,
-          withCredentials: true,
-        },
-      )
+    return this.axios
+      .post('/api/method/login', {
+        usr: username,
+        pwd: password,
+        device,
+      })
       .then((res) => res.data as AuthResponse)
       .catch((error) => {
         throw {
@@ -59,13 +50,8 @@ export class FrappeAuth {
 
   /** Gets the currently logged in user */
   async getLoggedInUser(): Promise<string> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .get(`${this.appURL}/api/method/frappe.auth.get_logged_user`, {
-        headers,
-        withCredentials: true,
-      })
+    return this.axios
+      .get('/api/method/frappe.auth.get_logged_user')
       .then((res) => res.data.message)
       .catch((error) => {
         throw {
@@ -79,17 +65,8 @@ export class FrappeAuth {
 
   /** Logs the user out */
   async logout(): Promise<void> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .post(
-        `${this.appURL}/api/method/logout`,
-        {},
-        {
-          headers,
-          withCredentials: true,
-        },
-      )
+    return this.axios
+      .post('/api/method/logout', {})
       .then(() => {
         return;
       })
@@ -105,20 +82,11 @@ export class FrappeAuth {
 
   /** Sends password reset email */
   async forgetPassword(user: string): Promise<void> {
-    const headers = this.getPreparedRequestHeaders();
-
-    return axios
-      .post(
-        `${this.appURL}`,
-        {
-          cmd: 'frappe.core.doctype.user.user.reset_password',
-          user,
-        },
-        {
-          headers,
-          withCredentials: true,
-        },
-      )
+    return this.axios
+      .post('/', {
+        cmd: 'frappe.core.doctype.user.user.reset_password',
+        user,
+      })
       .then(() => {
         return;
       })
