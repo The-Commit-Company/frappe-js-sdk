@@ -30,7 +30,7 @@ The library uses [Axios](https://axios-http.com) under the hood to make API call
 | Maintainer     | GitHub                                          | Social                                                       |
 | -------------- | ----------------------------------------------- | ------------------------------------------------------------ |
 | Nikhil Kothari | [nikkothari22](https://github.com/nikkothari22) | [@nik_kothari22](https://twitter.com/nik_kothari22)          |
-| Janhvi Patil   | [janhvipatil](https://github.com/janhvipatil)   | [@janhvipatil\_](https://twitter.com/janhvipatil_)           |
+| Janhvi Patil   | [janhvipatil](https://github.com/janhvipatil)   | [@janhvipatil_](https://twitter.com/janhvipatil_)           |
 | Sumit Jain     | [sumitjain236](https://github.com/sumitjain236) | [LinkedIn](https://www.linkedin.com/in/sumit-jain-66bb5719a) |
 
 ## Installation
