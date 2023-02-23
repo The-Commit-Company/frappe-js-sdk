@@ -15,7 +15,7 @@ export function getRequestHeaders(
   }
 
   // in case of browser environments
-  if (typeof window != 'undefined') {
+  if (typeof window !== 'undefined') {
     headers['X-Frappe-Site-Name'] = window.location.hostname;
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
