@@ -2,6 +2,7 @@ import { FrappeAuth } from '..';
 import { FrappeCall } from '../call';
 import { FrappeDB } from '../db';
 import { FrappeFileUpload } from '../file';
+import { TokenParams } from './types';
 
 export class FrappeApp {
   /** URL of the Frappe instance */
@@ -10,21 +11,21 @@ export class FrappeApp {
   /** Name of the Frappe App instance */
   readonly name: string;
 
-  /** Whether to use the token from the window object */
+  /** Whether to use token based auth */
   readonly useToken: boolean;
 
-  /** Token to be used for authentication */
+  /** Function that returns the token to be used for authentication */
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token'
 
-  constructor(url: string, name?: string, useToken?: boolean, token?: () => string, tokenType: 'Bearer' | 'token' = 'Bearer') {
+  constructor(url: string, tokenParams: TokenParams, name?: string) {
     this.url = url;
     this.name = name ?? 'FrappeApp';
-    this.useToken = useToken ?? false;
-    this.token = token;
-    this.tokenType = tokenType;
+    this.useToken = tokenParams.useToken ?? false;
+    this.token = tokenParams.token;
+    this.tokenType = tokenParams.type ?? 'Bearer';
   }
 
   /** Returns a FrappeAuth object for the app */
