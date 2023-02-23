@@ -62,8 +62,8 @@ export class FrappeFileUpload {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
-      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
+    if (this.useToken && this.tokenType && this.token) {
+      headers.Authorization = `${this.tokenType} ${this.token()}`;
     }
 
     return axios
