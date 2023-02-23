@@ -6,8 +6,20 @@ export class FrappeAuth {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  constructor(appURL: string) {
+  /** Whether to use the token from the window object */
+  readonly useToken: boolean;
+
+  /** Token to be used for authentication */
+  readonly token?: () => string;
+
+  /** Type of token to be used for authentication */
+  readonly tokenType?: 'Bearer' | 'token'
+
+  constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
+    this.useToken = useToken ?? false;
+    this.token = token;
+    this.tokenType = tokenType;
   }
 
   /** Logs in the user using username and password */
@@ -58,6 +70,10 @@ export class FrappeAuth {
 
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
+      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
     return axios

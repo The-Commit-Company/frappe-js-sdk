@@ -4,8 +4,20 @@ export class FrappeCall {
   /** URL of the Frappe App instance */
   private readonly appURL: string;
 
-  constructor(appURL: string) {
+  /** Whether to use the token from the window object */
+  readonly useToken: boolean;
+
+  /** Token to be used for authentication */
+  readonly token?: () => string;
+
+  /** Type of token to be used for authentication */
+  readonly tokenType?: 'Bearer' | 'token'
+
+  constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
+    this.useToken = useToken ?? false;
+    this.token = token;
+    this.tokenType = tokenType;
   }
 
   /** Makes a GET request to the specified endpoint */
@@ -18,6 +30,10 @@ export class FrappeCall {
 
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
+      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
     return axios
@@ -47,6 +63,10 @@ export class FrappeCall {
 
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    }
+
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
+      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
     return axios
@@ -82,6 +102,11 @@ export class FrappeCall {
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
+
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
+      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
+    }
+
     return axios
       .put(
         `${this.appURL}/api/method/${path}`,
@@ -115,6 +140,11 @@ export class FrappeCall {
     if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
+
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
+      headers['Authorization'] = `${this.tokenType} ${this.token()}`;
+    }
+
     return axios
       .delete(`${this.appURL}/api/method/${path}`, {
         headers,
