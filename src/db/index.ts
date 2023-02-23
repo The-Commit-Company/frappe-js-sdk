@@ -12,9 +12,9 @@ export class FrappeDB {
   readonly token?: () => string;
 
   /** Type of token to be used for authentication */
-  readonly tokenType?: 'Bearer' | 'Token'
+  readonly tokenType?: 'Bearer' | 'token'
 
-  constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'Token') {
+  constructor(appURL: string, useToken?: boolean, token?: () => string, tokenType?: 'Bearer' | 'token') {
     this.appURL = appURL;
     this.useToken = useToken ?? false;
     this.token = token;
@@ -49,7 +49,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
@@ -103,7 +103,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
@@ -140,7 +140,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
@@ -183,7 +183,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
@@ -226,7 +226,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
@@ -281,7 +281,7 @@ export class FrappeDB {
       headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
     }
 
-    if (this.useToken == true && this.tokenType != undefined && this.token != undefined) {
+    if (this.useToken && this.tokenType != undefined && this.token != undefined) {
       headers['Authorization'] = `${this.tokenType} ${this.token()}`;
     }
 
