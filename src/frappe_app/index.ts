@@ -25,12 +25,12 @@ export class FrappeApp {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
-  constructor(url: string, tokenParams: TokenParams, name?: string) {
+  constructor(url: string, tokenParams?: TokenParams, name?: string) {
     this.url = url;
     this.name = name ?? 'FrappeApp';
-    this.useToken = tokenParams.useToken ?? false;
-    this.token = tokenParams.token;
-    this.tokenType = tokenParams.type ?? 'Bearer';
+    this.useToken = tokenParams?.useToken ?? false;
+    this.token = tokenParams?.token;
+    this.tokenType = tokenParams?.type ?? 'Bearer';
     this.axios = getAxiosClient(this.url, this.useToken, this.token, this.tokenType);
   }
 
