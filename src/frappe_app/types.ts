@@ -11,5 +11,5 @@ export interface TokenParams {
   /** Function that returns the token as a string - this could be fetched from LocalStorage or auth providers like Firebase, Auth0 etc. */
   token?: () => string;
   /** Type of token to be used for authentication */
-  type: 'Bearer' | 'token'
+  type: 'Bearer' | 'token';
 }

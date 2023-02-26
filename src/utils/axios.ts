@@ -1,4 +1,17 @@
-import { AxiosRequestHeaders } from 'axios';
+import axios, { AxiosInstance, AxiosRequestHeaders } from 'axios';
+
+export function getAxiosClient(
+  appURL: string,
+  useToken?: boolean,
+  token?: () => string,
+  tokenType?: 'Bearer' | 'token',
+): AxiosInstance {
+  return axios.create({
+    baseURL: appURL,
+    headers: getRequestHeaders(useToken, tokenType, token),
+    withCredentials: true,
+  });
+}
 
 export function getRequestHeaders(
   useToken: boolean = false,
@@ -17,8 +30,8 @@ export function getRequestHeaders(
   // in case of browser environments
   if (typeof window !== 'undefined') {
     headers['X-Frappe-Site-Name'] = window.location.hostname;
-    if ((window as any).csrf_token && (window as any).csrf_token !== '{{ csrf_token }}') {
-      headers['X-Frappe-CSRF-Token'] = (window as any).csrf_token;
+    if (window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
+      headers['X-Frappe-CSRF-Token'] = window.csrf_token;
     }
   }
 
