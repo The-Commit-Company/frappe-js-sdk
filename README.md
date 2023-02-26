@@ -57,7 +57,7 @@ const frappe = new FrappeApp('https://test.frappe.cloud');
 
 In case you want to use the library with token based authentication (OAuth bearer tokens or API key/secret pairs), you can initialise the library like this:
 
-````js
+```js
 import { FrappeApp } from "frappe-js-sdk";
 
 const frappe = new FrappeApp("https://test.frappe.cloud", {
@@ -67,6 +67,7 @@ const frappe = new FrappeApp("https://test.frappe.cloud", {
     // This can be "Bearer" or "token"
     type: "Bearer"
 })
+```
 
 ## Authentication
 
@@ -74,7 +75,7 @@ const frappe = new FrappeApp("https://test.frappe.cloud", {
 
 ```js
 const auth = frappe.auth()
-````
+```
 
 #### Login a user:
 
