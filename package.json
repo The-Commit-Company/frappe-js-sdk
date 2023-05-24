@@ -1,6 +1,6 @@
 {
   "name": "frappe-js-sdk",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "TypeScript/JavaScript client for Frappe Framework REST API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikkothari22/frappe-js-sdk.git"
+    "url": "git+https://github.com/The-Commit-Company/frappe-js-sdk.git"
   },
   "keywords": [
     "Frappe"
@@ -25,9 +25,9 @@
   "author": "Nikhil Kothari",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nikkothari22/frappe-js-sdk/issues"
+    "url": "https://github.com/The-Commit-Company/frappe-js-sdk/issues"
   },
-  "homepage": "https://github.com/nikkothari22/frappe-js-sdk#readme",
+  "homepage": "https://github.com/The-Commit-Company/frappe-js-sdk#readme",
   "devDependencies": {
     "prettier": "^2.6.2",
     "tslint": "^6.1.3",
@@ -37,7 +37,7 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "axios": "^0.26.1"
   }
 }
