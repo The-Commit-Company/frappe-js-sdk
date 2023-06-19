@@ -367,7 +367,7 @@ file.uploadFile(
             myFile,
             fileArgs,
             /** Progress Indicator callback function **/
-            (completedBytes, totalBytes) => console.log(Math.round((c / t) * 100), " completed")
+            (completedBytes, totalBytes) => console.log(Math.round((completedBytes / totalBytes) * 100), " completed")
         )
         .then(() => console.log("File Upload complete"))
         .catch(e => console.error(e))
