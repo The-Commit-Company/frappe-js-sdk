@@ -29,7 +29,7 @@ export function getRequestHeaders(
 
   // in case of browser environments
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-    headers['X-Frappe-Site-Name'] = window.location.hostname;
+    headers['X-Frappe-Site-Name'] = window.location?.hostname;
     if (window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
       headers['X-Frappe-CSRF-Token'] = window.csrf_token;
     }
