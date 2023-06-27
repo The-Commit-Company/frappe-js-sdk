@@ -3,6 +3,10 @@ export interface Error {
   httpStatusText: string;
   message: string;
   exception: string;
+  exc?: string,
+  exc_type?: string,
+  _server_messages?: string;
+
 }
 
 export interface TokenParams {
