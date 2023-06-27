@@ -63,8 +63,8 @@ export class FrappeDB {
   async getDocList<T = any>(doctype: string, args?: GetDocListArgs<T>) {
     let params = {};
 
-    const fields: (keyof FrappeDoc<T>)[] = args?.fields ?? ['name'];
-    type GetDocListReturnType = Pick<FrappeDoc<T>, typeof fields[number]>[];
+    const fieldVariables: (keyof FrappeDoc<T>)[] = args?.fields ?? ['name'];
+    type GetDocListReturnType = Pick<FrappeDoc<T>, typeof fieldVariables[number]>[];
 
     if (args) {
       const { fields, filters, orFilters, orderBy, limit, limit_start, groupBy, asDict = true } = args;
@@ -79,7 +79,6 @@ export class FrappeDB {
         limit_start,
         as_dict: asDict,
       };
-
     }
 
     return this.axios
@@ -166,7 +165,12 @@ export class FrappeDB {
    * @param {boolean} [debug] Whether to print debug messages or not
    * @returns Promise which resolves a number
    */
-  async getCount<T = any>(doctype: string, filters?: Filter<T>[], cache: boolean = false, debug: boolean = false): Promise<number> {
+  async getCount<T = any>(
+    doctype: string,
+    filters?: Filter<T>[],
+    cache: boolean = false,
+    debug: boolean = false,
+  ): Promise<number> {
     const params: any = {
       doctype,
       filters: [],
@@ -216,7 +220,7 @@ export class FrappeDB {
       };
     }
 
-    const getDocLists = await this.getDocList<T>(doctype, { ...queryArgs, limit: 1, fields: ["name"] });
+    const getDocLists = await this.getDocList<T>(doctype, { ...queryArgs, limit: 1, fields: ['name'] });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
