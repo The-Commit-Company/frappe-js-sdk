@@ -49,6 +49,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -86,6 +87,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the documents.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -105,6 +107,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while creating the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         };
       });
   }
@@ -125,6 +128,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while updating the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         };
       });
   }
@@ -145,6 +149,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while deleting the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -183,6 +188,7 @@ export class FrappeDB {
           httpStatusText: error.response.statusText,
           message: 'There was an error while getting the count.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }

@@ -43,6 +43,7 @@ export class FrappeCall {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -58,6 +59,7 @@ export class FrappeCall {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -73,6 +75,7 @@ export class FrappeCall {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -88,6 +91,7 @@ export class FrappeCall {
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
+          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
