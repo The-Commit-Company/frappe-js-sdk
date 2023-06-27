@@ -60,12 +60,15 @@ export class FrappeDB {
    * @param {@type GetDocListArgs} [args] Arguments for the query
    * @returns Promise which resolves to an array of documents
    */
-  async getDocList<T = any>(doctype: string, args?: GetDocListArgs): Promise<T[]> {
+  async getDocList<T = any>(doctype: string, args?: GetDocListArgs<T>) {
     let params = {};
+
+    const fields: (keyof FrappeDoc<T>)[] = args?.fields ?? ['name'];
+    type GetDocListReturnType = Pick<FrappeDoc<T>, typeof fields[number]>[];
 
     if (args) {
       const { fields, filters, orFilters, orderBy, limit, limit_start, groupBy, asDict = true } = args;
-      const orderByString = orderBy ? `${orderBy?.field} ${orderBy?.order ?? 'asc'}` : '';
+      const orderByString = orderBy ? `${String(orderBy?.field)} ${orderBy?.order ?? 'asc'}` : '';
       params = {
         fields: fields ? JSON.stringify(fields) : undefined,
         filters: filters ? JSON.stringify(filters) : undefined,
@@ -76,10 +79,11 @@ export class FrappeDB {
         limit_start,
         as_dict: asDict,
       };
+
     }
 
     return this.axios
-      .get(`/api/resource/${doctype}`, { params })
+      .get<{ data: GetDocListReturnType }>(`/api/resource/${doctype}`, { params })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -162,7 +166,7 @@ export class FrappeDB {
    * @param {boolean} [debug] Whether to print debug messages or not
    * @returns Promise which resolves a number
    */
-  async getCount(doctype: string, filters?: Filter[], cache: boolean = false, debug: boolean = false): Promise<number> {
+  async getCount<T = any>(doctype: string, filters?: Filter<T>[], cache: boolean = false, debug: boolean = false): Promise<number> {
     const params: any = {
       doctype,
       filters: [],
@@ -198,8 +202,8 @@ export class FrappeDB {
    * @param {@type GetLastDocArgs} [args] Arguments for the query
    * @returns Promise which resolves to the document object
    */
-  async getLastDoc<T = any>(doctype: string, args?: GetLastDocArgs): Promise<FrappeDoc<T>> {
-    let queryArgs: GetLastDocArgs = {
+  async getLastDoc<T = any>(doctype: string, args?: GetLastDocArgs<T>): Promise<FrappeDoc<T>> {
+    let queryArgs: GetLastDocArgs<T> = {
       orderBy: {
         field: 'creation',
         order: 'desc',
@@ -212,7 +216,7 @@ export class FrappeDB {
       };
     }
 
-    const getDocLists = await this.getDocList<{ name?: string }>(doctype, { ...queryArgs, limit: 1 });
+    const getDocLists = await this.getDocList<T>(doctype, { ...queryArgs, limit: 1, fields: ["name"] });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
