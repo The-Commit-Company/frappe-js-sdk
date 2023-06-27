@@ -39,7 +39,7 @@ export class FrappeDB {
    * @param {string} docname Name of the document
    * @returns Promise which resolves to the document object
    */
-  async getDoc<T = any>(doctype: string, docname?: string | null): Promise<FrappeDoc<T>> {
+  async getDoc<T = any>(doctype: string, docname: string = ''): Promise<FrappeDoc<T>> {
     return this.axios
       .get(`/api/resource/${doctype}/${docname}`)
       .then((res) => res.data.data)
