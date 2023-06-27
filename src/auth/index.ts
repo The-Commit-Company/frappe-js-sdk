@@ -46,6 +46,7 @@ export class FrappeAuth {
       .then((res) => res.data as AuthResponse)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging in',
@@ -61,6 +62,7 @@ export class FrappeAuth {
       .then((res) => res.data.message)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the logged in user',
@@ -78,6 +80,7 @@ export class FrappeAuth {
       })
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging out',
@@ -98,6 +101,7 @@ export class FrappeAuth {
       })
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error sending password reset email.',

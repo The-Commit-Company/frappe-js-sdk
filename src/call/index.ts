@@ -39,6 +39,7 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
@@ -54,6 +55,7 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
@@ -69,6 +71,7 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
@@ -84,6 +87,7 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',

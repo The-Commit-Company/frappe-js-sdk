@@ -73,6 +73,7 @@ export class FrappeFileUpload {
       })
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while uploading the file.',
