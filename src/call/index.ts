@@ -39,11 +39,11 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -55,11 +55,11 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -71,11 +71,11 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -87,11 +87,11 @@ export class FrappeCall {
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error.',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }

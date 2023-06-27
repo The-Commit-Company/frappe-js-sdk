@@ -46,11 +46,11 @@ export class FrappeAuth {
       .then((res) => res.data as AuthResponse)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging in',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -62,11 +62,11 @@ export class FrappeAuth {
       .then((res) => res.data.message)
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: 'There was an error while fetching the logged in user',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -80,11 +80,11 @@ export class FrappeAuth {
       })
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error while logging out',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
@@ -101,11 +101,11 @@ export class FrappeAuth {
       })
       .catch((error) => {
         throw {
+          ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
           message: error.response.data.message ?? 'There was an error sending password reset email.',
           exception: error.response.data.exception ?? '',
-          _server_messages: error.response.data._server_messages ?? []
         } as Error;
       });
   }
