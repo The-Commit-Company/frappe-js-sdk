@@ -1,6 +1,7 @@
 type FilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'in' | 'not in' | 'like' | 'between' | '!=';
 type Value = string | number | boolean | Date | null;
-export type Filter<T = any> = [keyof T, FilterOperator, Value | Value[]];
+type MultiValueFilterOperator = 'in' | 'not in' | 'between';
+export type Filter<T = any> = [keyof FrappeDoc<T>, FilterOperator, FilterOperator extends MultiValueFilterOperator ? Value[] : Value];
 
 export type FrappeDoc<T> = T & {
   /** User who created the document */
@@ -22,8 +23,8 @@ export type FrappeDoc<T> = T & {
 };
 
 export interface GetLastDocArgs<T = any> {
-  filters?: Filter<FrappeDoc<T>>[];
-  orFilters?: Filter<FrappeDoc<T>>[];
+  filters?: Filter<T>[];
+  orFilters?: Filter<T>[];
   orderBy?: {
     field: keyof FrappeDoc<T>;
     order?: 'asc' | 'desc';
