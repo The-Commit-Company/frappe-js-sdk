@@ -1,7 +1,8 @@
-import { AxiosInstance } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
 import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
+import { FrappeApp } from '../frappe_app';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -60,11 +61,8 @@ export class FrappeDB {
    * @param {@type GetDocListArgs} [args] Arguments for the query
    * @returns Promise which resolves to an array of documents
    */
-  async getDocList<T = any>(doctype: string, args?: GetDocListArgs<T>) {
+  async getDocList<T = any, K = FrappeDoc<T>>(doctype: string, args?: GetDocListArgs<K>) {
     let params = {};
-
-    const fieldVariables: (keyof FrappeDoc<T>)[] = args?.fields ?? ['name'];
-    type GetDocListReturnType = Pick<FrappeDoc<T>, typeof fieldVariables[number]>[];
 
     if (args) {
       const { fields, filters, orFilters, orderBy, limit, limit_start, groupBy, asDict = true } = args;
@@ -82,7 +80,7 @@ export class FrappeDB {
     }
 
     return this.axios
-      .get<{ data: GetDocListReturnType }>(`/api/resource/${doctype}`, { params })
+      .get<{ data: T[] }>(`/api/resource/${doctype}`, { params })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -206,8 +204,8 @@ export class FrappeDB {
    * @param {@type GetLastDocArgs} [args] Arguments for the query
    * @returns Promise which resolves to the document object
    */
-  async getLastDoc<T = any>(doctype: string, args?: GetLastDocArgs<T>): Promise<FrappeDoc<T>> {
-    let queryArgs: GetLastDocArgs<T> = {
+  async getLastDoc<T = any>(doctype: string, args?: GetLastDocArgs<FrappeDoc<T>>): Promise<FrappeDoc<T>> {
+    let queryArgs: GetLastDocArgs<FrappeDoc<T>> = {
       orderBy: {
         field: 'creation',
         order: 'desc',
@@ -220,7 +218,7 @@ export class FrappeDB {
       };
     }
 
-    const getDocLists = await this.getDocList<T>(doctype, { ...queryArgs, limit: 1, fields: ['name'] });
+    const getDocLists = await this.getDocList<{ name: string }, FrappeDoc<T>>(doctype, { ...queryArgs, limit: 1, fields: ['name'] });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
