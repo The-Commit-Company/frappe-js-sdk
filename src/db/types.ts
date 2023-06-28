@@ -34,7 +34,7 @@ export interface GetLastDocArgs<T = any> {
 
 export interface GetDocListArgs<T = any> {
   /** Fields to be fetched */
-  fields?: (keyof T)[];
+  fields?: (keyof T | '*')[];
   /** Filters to be applied - SQL AND operation */
   filters?: Filter<T>[];
   /** Filters to be applied - SQL OR operation */
