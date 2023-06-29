@@ -3,8 +3,8 @@ type SingleValueFilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'like' |
 type MultiValueFilterOperator = 'in' | 'not in' | 'between';
 type FilterVar<T> = keyof T | (string & Record<never, never>);
 
-type SingleValueFilter<T = FrappeDoc<{}>> = [FilterVar<T>, SingleValueFilterOperator, Value];
-type MultiValueFilter<T = FrappeDoc<{}>> = [FilterVar<T>, MultiValueFilterOperator, Value[]];
+type SingleValueFilter<T> = [FilterVar<T>, SingleValueFilterOperator, Value];
+type MultiValueFilter<T> = [FilterVar<T>, MultiValueFilterOperator, Value[]];
 export type Filter<T = FrappeDoc<{}>> = SingleValueFilter<T> | MultiValueFilter<T>;
 
 export type FrappeDoc<T> = T & {
