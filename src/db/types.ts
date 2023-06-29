@@ -1,8 +1,11 @@
-type FilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'in' | 'not in' | 'like' | 'between' | '!=';
 type Value = string | number | boolean | Date | null;
+type SingleValueFilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'like' | '!=';
 type MultiValueFilterOperator = 'in' | 'not in' | 'between';
 type FilterVar<T> = keyof T | (string & Record<never, never>);
-export type Filter<T = FrappeDoc<{}>> = [FilterVar<T>, FilterOperator, FilterOperator extends MultiValueFilterOperator ? Value[] : Value];
+
+type SingleValueFilter<T = FrappeDoc<{}>> = [FilterVar<T>, SingleValueFilterOperator, Value];
+type MultiValueFilter<T = FrappeDoc<{}>> = [FilterVar<T>, MultiValueFilterOperator, Value[]];
+export type Filter<T = FrappeDoc<{}>> = SingleValueFilter<T> | MultiValueFilter<T>;
 
 export type FrappeDoc<T> = T & {
   /** User who created the document */
