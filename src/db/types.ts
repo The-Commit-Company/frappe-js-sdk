@@ -1,5 +1,5 @@
 type Value = string | number | boolean | Date | null;
-type SingleValueFilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'like' | '!=';
+type SingleValueFilterOperator = '=' | '>' | '<' | '>=' | '<=' | '<>' | 'like' | '!=' | 'Timespan';
 type MultiValueFilterOperator = 'in' | 'not in' | 'between';
 type FilterVar<T> = keyof T | (string & Record<never, never>);
 
