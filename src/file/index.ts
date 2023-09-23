@@ -40,7 +40,7 @@ export class FrappeFileUpload {
    * @param {VoidFunction} onProgress file upload progress
    * @returns Promise which resolves with the file object
    */
-  async uploadFile<T = any>(file: File, args: FileArgs<T>, onProgress?: (bytesUploaded: number, totalBytes: number) => void, api_path: string = 'upload_file') {
+  async uploadFile<T = any>(file: File, args: FileArgs<T>, onProgress?: (bytesUploaded: number, totalBytes: number) => void, apiPath: string = 'upload_file') {
     const formData = new FormData();
     if (file) formData.append('file', file, file.name);
 
@@ -71,7 +71,7 @@ export class FrappeFileUpload {
     }
 
     return this.axios
-      .post(`/api/method/${api_path}`, formData, {
+      .post(`/api/method/${apiPath}`, formData, {
         onUploadProgress: (progressEvent) => {
           if (onProgress) {
             onProgress(progressEvent.loaded, progressEvent.total);
