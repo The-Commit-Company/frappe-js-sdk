@@ -40,11 +40,11 @@ export class FrappeFileUpload {
    * @param {VoidFunction} onProgress file upload progress
    * @returns Promise which resolves with the file object
    */
-  async uploadFile(file: File, args: FileArgs, onProgress?: (bytesUploaded: number, totalBytes: number) => void) {
+  async uploadFile<T = any>(file: File, args: FileArgs<T>, onProgress?: (bytesUploaded: number, totalBytes: number) => void, api_path: string = 'upload_file') {
     const formData = new FormData();
     if (file) formData.append('file', file, file.name);
 
-    const { isPrivate, folder, file_url, doctype, docname, fieldname } = args;
+    const { isPrivate, folder, file_url, doctype, docname, fieldname, otherData } = args;
 
     if (isPrivate) {
       formData.append('is_private', '1');
@@ -63,8 +63,15 @@ export class FrappeFileUpload {
       }
     }
 
+    if (otherData) {
+      Object.keys(otherData).forEach((key: string) => {
+        const v = otherData[key as keyof T] as any;
+        formData.append(key, v);
+      });
+    }
+
     return this.axios
-      .post('/api/method/upload_file', formData, {
+      .post(`/api/method/${api_path}`, formData, {
         onUploadProgress: (progressEvent) => {
           if (onProgress) {
             onProgress(progressEvent.loaded, progressEvent.total);
