@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
-import { AuthCredentials, AuthResponse } from './types';
+import { AuthCredentials, AuthResponse, OTPCredentials, UserPassCredentials } from './types';
 
 export class FrappeAuth {
   /** URL of the Frappe App instance */
@@ -35,15 +35,14 @@ export class FrappeAuth {
 
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
-    const { username, password, device, otp, tmp_id } = credentials;
 
     return this.axios
       .post('/api/method/login', {
-        usr: username,
-        pwd: password,
-        otp,
-        tmp_id,
-        device,
+        usr: (credentials as UserPassCredentials).username,
+        pwd: (credentials as UserPassCredentials).password,
+        otp: (credentials as OTPCredentials).otp,
+        tmp_id: (credentials as OTPCredentials).tmp_id,
+        device: credentials.device,
       })
       .then((res) => res.data as AuthResponse)
       .catch((error) => {
