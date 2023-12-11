@@ -35,12 +35,14 @@ export class FrappeAuth {
 
   /** Logs in the user using username and password */
   async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
-    const { username, password, device } = credentials;
+    const { username, password, device, otp, tmp_id } = credentials;
 
     return this.axios
       .post('/api/method/login', {
         usr: username,
         pwd: password,
+        otp,
+        tmp_id,
         device,
       })
       .then((res) => res.data as AuthResponse)
