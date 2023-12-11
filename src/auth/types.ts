@@ -12,4 +12,5 @@ export interface AuthResponse {
   full_name: string;
   tmp_id: string;
   verification: any;
+  exc_type: string;
 }
