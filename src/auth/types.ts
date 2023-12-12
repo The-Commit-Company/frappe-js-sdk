@@ -1,4 +1,10 @@
-export type AuthCredentials = UserPassCredentials | OTPCredentials;
+export interface AuthCredentials {
+  username?: string;
+  password?: string;
+  otp?: string;
+  tmp_id?: string;
+  device?: string;
+}
 
 export interface AuthResponse {
   message?: string;
@@ -7,16 +13,4 @@ export interface AuthResponse {
   tmp_id?: string;
   verification?: any;
   exc_type?: string;
-}
-
-export interface UserPassCredentials {
-  username: string;
-  password: string;
-  device?: string;
-}
-
-export interface OTPCredentials {
-  otp: string;
-  tmp_id: string;
-  device?: string;
 }

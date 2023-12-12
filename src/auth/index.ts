@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
-import { AuthCredentials, AuthResponse, OTPCredentials, UserPassCredentials } from './types';
+import { AuthCredentials, AuthResponse } from './types';
 
 export class FrappeAuth {
   /** URL of the Frappe App instance */
@@ -34,26 +34,49 @@ export class FrappeAuth {
   }
 
   /** Logs in the user using username and password */
-  async loginWithUsernamePassword(credentials: AuthCredentials): Promise<AuthResponse> {
-
-    return this.axios
-      .post('/api/method/login', {
-        usr: (credentials as UserPassCredentials).username,
-        pwd: (credentials as UserPassCredentials).password,
-        otp: (credentials as OTPCredentials).otp,
-        tmp_id: (credentials as OTPCredentials).tmp_id,
-        device: credentials.device,
-      })
-      .then((res) => res.data as AuthResponse)
-      .catch((error) => {
-        throw {
-          ...error.response.data,
-          httpStatus: error.response.status,
-          httpStatusText: error.response.statusText,
-          message: error.response.data.message ?? 'There was an error while logging in',
-          exception: error.response.data.exception ?? '',
-        } as Error;
-      });
+  async loginWithUsernamePassword({ username, password, otp, tmp_id, device }: AuthCredentials): Promise<AuthResponse> {
+    if (username && password) {
+      return this.axios
+        .post('/api/method/login', {
+          usr: username,
+          pwd: password,
+          device: device,
+        })
+        .then((res) => res.data as AuthResponse)
+        .catch((error) => {
+          throw {
+            ...error.response.data,
+            httpStatus: error.response.status,
+            httpStatusText: error.response.statusText,
+            message: error.response.data.message ?? 'There was an error while logging in',
+            exception: error.response.data.exception ?? '',
+          } as Error;
+        });
+    } else if (otp && tmp_id) {
+      return this.axios
+        .post('/api/method/login', {
+          otp: otp,
+          tmp_id: tmp_id,
+          device: device,
+        })
+        .then((res) => res.data as AuthResponse)
+        .catch((error) => {
+          throw {
+            ...error.response.data,
+            httpStatus: error.response.status,
+            httpStatusText: error.response.statusText,
+            message: error.response.data.message ?? 'There was an error while logging in',
+            exception: error.response.data.exception ?? '',
+          } as Error;
+        });
+    } else {
+      throw {
+        httpStatus: 400,
+        httpStatusText: 'Bad Request',
+        message: 'Username and Password or OTP and tmp_id are required',
+        exception: '',
+      } as Error;
+    }
   }
 
   /** Gets the currently logged in user */
