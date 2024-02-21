@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 
 export function getAxiosClient(
   appURL: string,
@@ -17,8 +17,8 @@ export function getRequestHeaders(
   useToken: boolean = false,
   tokenType?: 'Bearer' | 'token',
   token?: () => string,
-): AxiosRequestHeaders {
-  const headers: AxiosRequestHeaders = {
+): RawAxiosRequestHeaders {
+  const headers: RawAxiosRequestHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json; charset=utf-8',
   };
