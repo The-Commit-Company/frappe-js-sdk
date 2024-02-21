@@ -4,7 +4,7 @@ TypeScript/JavaScript library for a [Frappe Framework](https://frappeframework.c
 
 <br />
 <p align="center">
-  <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/maintenance/yes/2023?style=flat-square" /></a>
+  <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/maintenance/yes/2024?style=flat-square" /></a>
   <a href="https://github.com/nikkothari22/frappe-js-sdk"><img src="https://img.shields.io/github/license/nikkothari22/frappe-js-sdk?style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/frappe-js-sdk"><img src="https://img.shields.io/npm/v/frappe-js-sdk?style=flat-square" /></a>
     <a href="https://www.npmjs.com/package/frappe-js-sdk"><img src="https://img.shields.io/npm/dw/frappe-js-sdk?style=flat-square" /></a>
