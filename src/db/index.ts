@@ -1,8 +1,7 @@
-import { AxiosError, AxiosInstance } from 'axios';
+import { AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
 import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
-import { FrappeApp } from '../frappe_app';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
