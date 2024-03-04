@@ -35,10 +35,22 @@ export class FrappeCall {
   /** Makes a GET request to the specified endpoint */
   async get<T = any>(path: string, params?: Record<string, any>): Promise<T> {
 
+    const encodedParams = new URLSearchParams();
     // TEMP Fix Issue #50
-    const encodedParams = new URLSearchParams(params).toString();
+    if (params) {
+      Object.entries(params).forEach(param => {
+        const [key, value] = param;
+        if (value !== null && value !== undefined) {
+          const val = typeof value === 'object' ? JSON.stringify(value) : value;
+          encodedParams.set(key, val);
+        }
+      })
+    }
+
     return this.axios
-      .get(`/api/method/${path}?${encodedParams}`)
+      .get(`/api/method/${path}`, {
+        params: encodedParams,
+      })
       .then((res) => res.data as T)
       .catch((error) => {
         throw {
