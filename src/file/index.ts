@@ -2,6 +2,7 @@ import { AxiosInstance, AxiosProgressEvent } from 'axios';
 
 import { Error } from '../frappe_app/types';
 import { FileArgs } from './types';
+import { getRequestHeaders } from '../utils/axios';
 
 export class FrappeFileUpload {
   /** URL of the Frappe App instance */
@@ -77,6 +78,10 @@ export class FrappeFileUpload {
             onProgress(progressEvent.loaded, progressEvent.total, progressEvent);
           }
         },
+        headers: {
+          ...getRequestHeaders(this.useToken, this.tokenType, this.token),
+          'Content-Type': 'multipart/form-data',
+        }
       })
       .catch((error) => {
         throw {
