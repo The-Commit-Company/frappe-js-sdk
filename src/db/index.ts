@@ -41,7 +41,7 @@ export class FrappeDB {
    */
   async getDoc<T = any>(doctype: string, docname: string = ''): Promise<FrappeDoc<T>> {
     return this.axios
-      .get(`/api/resource/${doctype}/${docname}`)
+      .get(`/api/resource/${doctype}/${encodeURIComponent(docname)}`)
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -120,7 +120,7 @@ export class FrappeDB {
    */
   async updateDoc<T = any>(doctype: string, docname: string | null, value: Partial<T>): Promise<FrappeDoc<T>> {
     return this.axios
-      .put(`/api/resource/${doctype}/${docname}`, { ...value })
+      .put(`/api/resource/${doctype}/${docname ? encodeURIComponent(docname) : docname}`, { ...value })
       .then((res) => res.data.data)
       .catch((error) => {
         throw {
@@ -141,7 +141,7 @@ export class FrappeDB {
    */
   async deleteDoc(doctype: string, docname?: string | null): Promise<{ message: string }> {
     return this.axios
-      .delete(`/api/resource/${doctype}/${docname}`)
+      .delete(`/api/resource/${doctype}/${docname ? encodeURIComponent(docname) : docname}`)
       .then((res) => res.data)
       .catch((error) => {
         throw {
