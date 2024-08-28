@@ -5,10 +5,11 @@ export function getAxiosClient(
   useToken?: boolean,
   token?: () => string,
   tokenType?: 'Bearer' | 'token',
+  customHeaders?: object
 ): AxiosInstance {
   return axios.create({
     baseURL: appURL,
-    headers: getRequestHeaders(useToken, tokenType, token),
+    headers: getRequestHeaders(useToken, tokenType, token, customHeaders),
     withCredentials: true,
   });
 }
@@ -17,6 +18,7 @@ export function getRequestHeaders(
   useToken: boolean = false,
   tokenType?: 'Bearer' | 'token',
   token?: () => string,
+  customHeaders?: object
 ): RawAxiosRequestHeaders {
   const headers: RawAxiosRequestHeaders = {
     Accept: 'application/json',
@@ -37,5 +39,8 @@ export function getRequestHeaders(
     }
   }
 
-  return headers;
+  return {
+    ...headers,
+    ...(customHeaders ?? {})
+  };
 }
