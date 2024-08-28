@@ -84,7 +84,7 @@ export class FrappeFileUpload {
           }
         },
         headers: {
-          ...getRequestHeaders(this.useToken, this.tokenType, this.token, this.customHeaders),
+          ...getRequestHeaders(this.useToken, this.tokenType, this.token, this.appURL, this.customHeaders),
           'Content-Type': 'multipart/form-data',
         }
       })
