@@ -25,13 +25,17 @@ export class FrappeApp {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
-  constructor(url: string, tokenParams?: TokenParams, name?: string) {
+  /** Custom Headers to be passed in each request */
+  readonly customHeaders?: object
+
+  constructor(url: string, tokenParams?: TokenParams, name?: string, customHeaders?: object) {
     this.url = url;
     this.name = name ?? 'FrappeApp';
     this.useToken = tokenParams?.useToken ?? false;
     this.token = tokenParams?.token;
     this.tokenType = tokenParams?.type ?? 'Bearer';
-    this.axios = getAxiosClient(this.url, this.useToken, this.token, this.tokenType);
+    this.customHeaders = customHeaders
+    this.axios = getAxiosClient(this.url, this.useToken, this.token, this.tokenType, this.customHeaders);
   }
 
   /** Returns a FrappeAuth object for the app */
@@ -46,7 +50,7 @@ export class FrappeApp {
 
   /** Returns a FrappeFileUpload object for the app */
   file() {
-    return new FrappeFileUpload(this.url, this.axios, this.useToken, this.token, this.tokenType);
+    return new FrappeFileUpload(this.url, this.axios, this.useToken, this.token, this.tokenType, this.customHeaders);
   }
 
   /** Returns a FrappeCall object for the app */

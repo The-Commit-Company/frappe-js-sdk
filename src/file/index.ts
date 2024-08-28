@@ -20,18 +20,23 @@ export class FrappeFileUpload {
   /** Type of token to be used for authentication */
   readonly tokenType?: 'Bearer' | 'token';
 
+  /** Custom Headers to be passed in request */
+  readonly customHeaders?: object
+
   constructor(
     appURL: string,
     axios: AxiosInstance,
     useToken?: boolean,
     token?: () => string,
     tokenType?: 'Bearer' | 'token',
+    customHeaders?: object
   ) {
     this.appURL = appURL;
     this.axios = axios;
     this.useToken = useToken ?? false;
     this.token = token;
     this.tokenType = tokenType;
+    this.customHeaders = customHeaders
   }
 
   /**
@@ -79,7 +84,7 @@ export class FrappeFileUpload {
           }
         },
         headers: {
-          ...getRequestHeaders(this.useToken, this.tokenType, this.token),
+          ...getRequestHeaders(this.useToken, this.tokenType, this.token, this.customHeaders),
           'Content-Type': 'multipart/form-data',
         }
       })
