@@ -224,4 +224,38 @@ export class FrappeDB {
 
     return {} as FrappeDoc<T>;
   }
+  
+  /**
+   * Renames a document from the database
+   * @param {string} doctype Name of the doctype
+   * @param {string} oldname Current name of the document
+   * @param {string} newname The new name that will replace the `oldname`
+   * @param {boolean} merge  Merges the old document into the new one if a document with `newname` already exists.
+   * @returns Promise which resolves with the updated document name
+   */
+  async renameDoc<T = any>(
+    doctype: string,
+    oldname: string | null,
+    newname: string | null,
+    merge: boolean = false,
+  ): Promise<FrappeDoc<T>> {
+    return this.axios
+      .post('/api/method/frappe.client.rename_doc', {
+        doctype,
+        old_name: oldname,
+        new_name: newname,
+        merge: merge,
+      })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: error.response.data.message ?? 'There was an error while creating the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        };
+      });
+  }
+
 }
