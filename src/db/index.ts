@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
-import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
+import { FieldName, Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -252,9 +252,70 @@ export class FrappeDB {
           ...error.response.data,
           httpStatus: error.response.status,
           httpStatusText: error.response.statusText,
-          message: error.response.data.message ?? 'There was an error while creating the document.',
+          message: error.response.data.message ?? 'There was an error while renaming the document.',
           exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
         };
+      });
+  }
+
+  /**
+   * Gets value of document from the database for a particular doctype with the given fieldnames and filters
+   * @param {string} doctype Name of the doctype
+   * @param {FieldName} [fieldname] - Fields to be returned (default `name`)
+   * @param {Filter[]} [filters] Filters to be applied in the get query
+   * @param {boolean} as_dict Return as dict(object) or list (array)
+   * @param {boolean} [debug] Whether to print debug messages or not
+   * @param {string} parent Parent doctype name to fetch child table record
+   * @returns Promise which resolves a object with specified fieldnames
+   */
+  async getValue<T = any>(
+    doctype: string,
+    fieldname?: FieldName,
+    filters?: Filter<T>[],
+    as_dict?: boolean,
+    debug?: boolean,
+    parent?: string | null,
+  ): Promise<T> {
+    const params: any = {
+      doctype,
+      fieldname:"[]",
+      filters: [],
+      as_dict: true,
+      debug: false,
+      parent: null,
+    };
+
+    if (fieldname) {
+      params.fieldname = fieldname ? JSON.stringify(fieldname) : undefined;
+    }
+
+    if (filters) {
+      params.filters = filters ? JSON.stringify(filters) : undefined;
+    }
+
+    if (as_dict) {
+      params.as_dict = as_dict;
+    }
+
+    if (debug) {
+      params.debug = debug;
+    }
+
+    if (parent) {
+      params.parent = parent;
+    }
+
+    return this.axios
+      .get('/api/method/frappe.client.get_value', { params })
+      .then((res) => res.data.message)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while getting the value.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
       });
   }
 
