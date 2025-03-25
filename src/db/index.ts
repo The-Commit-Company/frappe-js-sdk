@@ -217,14 +217,18 @@ export class FrappeDB {
       };
     }
 
-    const getDocLists = await this.getDocList<{ name: string }, FrappeDoc<T>>(doctype, { ...queryArgs, limit: 1, fields: ['name'] });
+    const getDocLists = await this.getDocList<{ name: string }, FrappeDoc<T>>(doctype, {
+      ...queryArgs,
+      limit: 1,
+      fields: ['name'],
+    });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
 
     return {} as FrappeDoc<T>;
   }
-  
+
   /**
    * Renames a document from the database
    * @param {string} doctype Name of the doctype
@@ -266,39 +270,31 @@ export class FrappeDB {
    * @param {boolean} as_dict Return as dict(object) or list (array)
    * @param {boolean} [debug] Whether to print debug messages or not
    * @param {string} parent Parent doctype name to fetch child table record
-   * @returns Promise which resolves a object with specified fieldnames
+   * @returns Promise which resolves an object with specified fieldnames
    */
   async getValue<T = any>(
     doctype: string,
     fieldname?: FieldName,
     filters?: Filter<T>[],
-    as_dict?: boolean,
-    debug?: boolean,
-    parent?: string | null,
+    as_dict: boolean = true,
+    debug: boolean = false,
+    parent: string | null = null,
   ): Promise<T> {
     const params: any = {
       doctype,
-      fieldname:"[]",
+      fieldname: '[]',
       filters: [],
-      as_dict: true,
-      debug: false,
+      as_dict: as_dict,
+      debug: debug,
       parent: null,
     };
 
     if (fieldname) {
-      params.fieldname = fieldname ? JSON.stringify(fieldname) : undefined;
+      params.fieldname = typeof fieldname === 'object' ? JSON.stringify(fieldname) : fieldname;
     }
 
     if (filters) {
       params.filters = filters ? JSON.stringify(filters) : undefined;
-    }
-
-    if (as_dict) {
-      params.as_dict = as_dict;
-    }
-
-    if (debug) {
-      params.debug = debug;
     }
 
     if (parent) {
@@ -307,7 +303,7 @@ export class FrappeDB {
 
     return this.axios
       .get('/api/method/frappe.client.get_value', { params })
-      .then((res) => res.data.message)
+      .then((res) => res.data)
       .catch((error) => {
         throw {
           ...error.response.data,
@@ -325,7 +321,7 @@ export class FrappeDB {
    * @param {string} name Name of the document
    * @param {string | object} fieldname Fieldname(s) whose value(s) need to be set.
    * @param {any} value Value to be set in the fieldname if fieldname
-   * @returns Promise which resolves a updated docoument
+   * @returns Promise which resolves an updated docoument
    */
   async setValue<T = any>(
     doctype: string,
@@ -333,19 +329,18 @@ export class FrappeDB {
     fieldname: string | object,
     value?: any,
   ): Promise<FrappeDoc<T>> {
-
-    if(fieldname !== null && typeof fieldname === 'object' && !Array.isArray(fieldname)) {
-      value = undefined
+    if (fieldname !== null && typeof fieldname === 'object' && !Array.isArray(fieldname)) {
+      value = undefined;
     }
 
     return this.axios
-      .post('/api/method/frappe.client.set_value', { 
+      .post('/api/method/frappe.client.set_value', {
         doctype,
         name,
         fieldname,
-        value
-       })
-      .then((res) => {console.log(res.data.message); return res.data.message })
+        value,
+      })
+      .then((res) => res.data)
       .catch((error) => {
         throw {
           ...error.response.data,
@@ -360,14 +355,10 @@ export class FrappeDB {
   /**
    * Gets the field value from the database for a specific single doctype.
    * @param {string} doctype Name of the doctype
-   * @param {string} field Name of the field 
-   * @returns Promise which resolves a value of the field 
+   * @param {string} field Name of the field
+   * @returns Promise which resolves a value of the field
    */
-  async getSingleValue<T = any>(
-    doctype: string,
-    field: string,
-  ): Promise<T> {
-
+  async getSingleValue<T = any>(doctype: string, field: string): Promise<T> {
     const params: any = {
       doctype,
       field,
@@ -387,4 +378,44 @@ export class FrappeDB {
       });
   }
 
+  /**
+   * Submit a document.
+   * @param {object} doc Document to be submitted
+   * @returns Promise which resolves a submitted document
+   */
+  async submit<T = any>(doc: object): Promise<T> {
+    return this.axios
+      .post('/api/method/frappe.client.submit', { doc })
+      .then((res) => res.data.message)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while submitting the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Cancel a document.
+   * @param {string} doctype Name of the doctype
+   * @param {string} name Name of the document to be cancelled
+   * @returns Promise which resolves a cancelled document
+   */
+  async cancel<T = any>(doctype: string, name: string): Promise<FrappeDoc<T>> {
+    return this.axios
+      .post('/api/method/frappe.client.cancel', { doctype, name })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while cancelling the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
 }
