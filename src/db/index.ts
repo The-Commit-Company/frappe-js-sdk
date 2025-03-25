@@ -357,4 +357,34 @@ export class FrappeDB {
       });
   }
 
+  /**
+   * Gets the field value from the database for a specific single doctype.
+   * @param {string} doctype Name of the doctype
+   * @param {string} field Name of the field 
+   * @returns Promise which resolves a value of the field 
+   */
+  async getSingleValue<T = any>(
+    doctype: string,
+    field: string,
+  ): Promise<T> {
+
+    const params: any = {
+      doctype,
+      field,
+    };
+
+    return this.axios
+      .get('/api/method/frappe.client.get_single_value', { params })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while getting the value of single doctype.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
 }
