@@ -319,4 +319,42 @@ export class FrappeDB {
       });
   }
 
+  /**
+   * Sets the field values in the database for the specified doctype.
+   * @param {string} doctype Name of the doctype
+   * @param {string} name Name of the document
+   * @param {string | object} fieldname Fieldname(s) whose value(s) need to be set.
+   * @param {any} value Value to be set in the fieldname if fieldname
+   * @returns Promise which resolves a updated docoument
+   */
+  async setValue<T = any>(
+    doctype: string,
+    name: string,
+    fieldname: string | object,
+    value?: any,
+  ): Promise<FrappeDoc<T>> {
+
+    if(fieldname !== null && typeof fieldname === 'object' && !Array.isArray(fieldname)) {
+      value = undefined
+    }
+
+    return this.axios
+      .post('/api/method/frappe.client.set_value', { 
+        doctype,
+        name,
+        fieldname,
+        value
+       })
+      .then((res) => {console.log(res.data.message); return res.data.message })
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while setting the value.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
 }
