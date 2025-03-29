@@ -263,7 +263,7 @@ export class FrappeDB {
   }
 
   /**
-   * Gets value of document from the database for a particular doctype with the given fieldnames and filters
+   * Retrieves a document's value from the database for a specific doctype using the provided field names and filters.
    * @param {string} doctype Name of the doctype
    * @param {FieldName} [fieldname] - Fields to be returned (default `name`)
    * @param {Filter[]} [filters] Filters to be applied in the get query
@@ -320,7 +320,7 @@ export class FrappeDB {
    * @param {string} doctype Name of the doctype
    * @param {string} name Name of the document
    * @param {string | object} fieldname Fieldname(s) whose value(s) need to be set.
-   * @param {any} value Value to be set in the fieldname if fieldname
+   * @param {any} value Value to be set in fieldname when updating a single field or if `fieldname` is a string.
    * @returns Promise which resolves an updated docoument
    */
   async setValue<T = any>(
@@ -353,10 +353,10 @@ export class FrappeDB {
   }
 
   /**
-   * Gets the field value from the database for a specific single doctype.
+   * Retrieves the field value from the database for a specific single doctype.
    * @param {string} doctype Name of the doctype
    * @param {string} field Name of the field
-   * @returns Promise which resolves a value of the field
+   * @returns Promise that resolves to the field's value.
    */
   async getSingleValue<T = any>(doctype: string, field: string): Promise<T> {
     const params: any = {
@@ -381,7 +381,7 @@ export class FrappeDB {
   /**
    * Submit a document.
    * @param {object} doc Document to be submitted
-   * @returns Promise which resolves a submitted document
+   * @returns Promise that resolves to a submitted document.
    */
   async submit<T = any>(doc: object): Promise<T> {
     return this.axios
@@ -402,7 +402,7 @@ export class FrappeDB {
    * Cancel a document.
    * @param {string} doctype Name of the doctype
    * @param {string} name Name of the document to be cancelled
-   * @returns Promise which resolves a cancelled document
+   * @returns Promise that resolves to a canceled document.
    */
   async cancel<T = any>(doctype: string, name: string): Promise<FrappeDoc<T>> {
     return this.axios
