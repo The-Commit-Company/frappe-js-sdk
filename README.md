@@ -222,6 +222,77 @@ db.deleteDoc('My Custom DocType', 'Test')
   .catch((error) => console.error(error));
 ```
 
+#### Rename a document
+
+To rename a document, pass the name of the DocType, old name, new name, and an optional merge flag to `renameDoc`.
+
+```js
+db.renameDoc('My Custom DocType', 'Old Name', 'New Name')
+  .then((response) => console.log(response.message)) // The message will reflect the updated document name.
+  .catch((error) => console.error(error));
+```
+
+#### Get field values of a document
+
+To retrieve document values, pass the name of the DocType, field names (string or array), filters, and additional parameters to `getValue`.
+
+```js
+/** Get single field value **/
+db.getValue('My Custom DocType', 'Field_Name', [['Filter1', '=', 'Value1'],['Filter2', '=', 'Value2']])
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+
+/** Get multiple field values **/
+db.getValue('My Custom DocType', ['Field_Name1', 'Field_Name2'], [['Filter1', '=', 'Value1'],['Filter2', '=', 'Value2']])
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+```
+
+#### Set field values of a document
+
+To set field values, pass the name of the DocType, document name, field name (or an object of field-value pairs), and an optional value to `setValue`.
+
+```js
+/** Set value of a single field **/
+db.setValue('My Custom DocType', 'Test', 'Field_Name', 'Value')
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+
+/** Set values of multiple fields **/
+db.setValue('My Custom DocType', 'Test', {'Field_Name1':"Value1",'Field_Name2':"Value2"})
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+```
+
+#### Get field value from a single doctype
+
+To retrieve a field value from a Single-type doctype, pass the name of the DocType and field name to `getSingleValue`.
+
+```js
+db.getSingleValue('My Custom Single DocType', 'Field_Name')
+  .then((response) => console.log(response.message)) // Message will reflect the value of the field.
+  .catch((error) => console.error(error));
+```
+
+#### Submit a document
+
+To submit a document, pass the document object to `submit`.
+
+```js
+db.submit(doc)
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+```
+
+#### Cancel a document
+To cancel a submitted document, pass the name of the DocType and document name to `cancel`.
+
+```js
+db.cancel('My Custom DocType', 'Test')
+  .then((doc) => console.log(doc))
+  .catch((error) => console.error(error));
+```
+
 ## Usage with Typescript
 
 The library supports Typescript out of the box.
