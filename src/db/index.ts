@@ -248,7 +248,7 @@ export class FrappeDB {
         doctype,
         old_name: oldname,
         new_name: newname,
-        merge: merge,
+        merge,
       })
       .then((res) => res.data)
       .catch((error) => {
@@ -267,7 +267,7 @@ export class FrappeDB {
    * @param {string} doctype Name of the doctype
    * @param {FieldName} [fieldname] - Fields to be returned (default `name`)
    * @param {Filter[]} [filters] Filters to be applied in the get query
-   * @param {boolean} as_dict Return as dict(object) or list (array)
+   * @param {boolean} asDict Return as dict(object) or list (array)
    * @param {boolean} [debug] Whether to print debug messages or not
    * @param {string} parent Parent doctype name to fetch child table record
    * @returns Promise which resolves an object with specified fieldnames
@@ -276,7 +276,7 @@ export class FrappeDB {
     doctype: string,
     fieldname?: FieldName,
     filters?: Filter<T>[],
-    as_dict: boolean = true,
+    asDict: boolean = true,
     debug: boolean = false,
     parent: string | null = null,
   ): Promise<T> {
@@ -284,8 +284,8 @@ export class FrappeDB {
       doctype,
       fieldname: '[]',
       filters: [],
-      as_dict: as_dict,
-      debug: debug,
+      as_dict: asDict,
+      debug,
       parent: null,
     };
 
