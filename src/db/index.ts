@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { Error } from '../frappe_app/types';
-import { Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
+import { FieldName, Filter, FrappeDoc, GetDocListArgs, GetLastDocArgs } from './types';
 
 export class FrappeDB {
   /** URL of the Frappe App instance */
@@ -217,11 +217,205 @@ export class FrappeDB {
       };
     }
 
-    const getDocLists = await this.getDocList<{ name: string }, FrappeDoc<T>>(doctype, { ...queryArgs, limit: 1, fields: ['name'] });
+    const getDocLists = await this.getDocList<{ name: string }, FrappeDoc<T>>(doctype, {
+      ...queryArgs,
+      limit: 1,
+      fields: ['name'],
+    });
     if (getDocLists.length > 0) {
       return this.getDoc<T>(doctype, getDocLists[0].name);
     }
 
     return {} as FrappeDoc<T>;
+  }
+
+  /**
+   * Renames a document from the database
+   * @param {string} doctype Name of the doctype
+   * @param {string} oldname Current name of the document
+   * @param {string} newname The new name that will replace the `oldname`
+   * @param {boolean} merge  Merges the old document into the new one if a document with `newname` already exists.
+   * @returns Promise which resolves with the updated document name
+   */
+  async renameDoc<T = any>(
+    doctype: string,
+    oldname: string | null,
+    newname: string | null,
+    merge: boolean = false,
+  ): Promise<FrappeDoc<T>> {
+    return this.axios
+      .post('/api/method/frappe.client.rename_doc', {
+        doctype,
+        old_name: oldname,
+        new_name: newname,
+        merge: merge,
+      })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: error.response.data.message ?? 'There was an error while renaming the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        };
+      });
+  }
+
+  /**
+   * Retrieves a document's value from the database for a specific doctype using the provided field names and filters.
+   * @param {string} doctype Name of the doctype
+   * @param {FieldName} [fieldname] - Fields to be returned (default `name`)
+   * @param {Filter[]} [filters] Filters to be applied in the get query
+   * @param {boolean} as_dict Return as dict(object) or list (array)
+   * @param {boolean} [debug] Whether to print debug messages or not
+   * @param {string} parent Parent doctype name to fetch child table record
+   * @returns Promise which resolves an object with specified fieldnames
+   */
+  async getValue<T = any>(
+    doctype: string,
+    fieldname?: FieldName,
+    filters?: Filter<T>[],
+    as_dict: boolean = true,
+    debug: boolean = false,
+    parent: string | null = null,
+  ): Promise<T> {
+    const params: any = {
+      doctype,
+      fieldname: '[]',
+      filters: [],
+      as_dict: as_dict,
+      debug: debug,
+      parent: null,
+    };
+
+    if (fieldname) {
+      params.fieldname = typeof fieldname === 'object' ? JSON.stringify(fieldname) : fieldname;
+    }
+
+    if (filters) {
+      params.filters = filters ? JSON.stringify(filters) : undefined;
+    }
+
+    if (parent) {
+      params.parent = parent;
+    }
+
+    return this.axios
+      .get('/api/method/frappe.client.get_value', { params })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while getting the value.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Sets the field values in the database for the specified doctype.
+   * @param {string} doctype Name of the doctype
+   * @param {string} name Name of the document
+   * @param {string | object} fieldname Fieldname(s) whose value(s) need to be set.
+   * @param {any} value Value to be set in fieldname when updating a single field or if `fieldname` is a string.
+   * @returns Promise which resolves an updated docoument
+   */
+  async setValue<T = any>(
+    doctype: string,
+    name: string,
+    fieldname: string | object,
+    value?: any,
+  ): Promise<FrappeDoc<T>> {
+    if (fieldname !== null && typeof fieldname === 'object' && !Array.isArray(fieldname)) {
+      value = undefined;
+    }
+
+    return this.axios
+      .post('/api/method/frappe.client.set_value', {
+        doctype,
+        name,
+        fieldname,
+        value,
+      })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while setting the value.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Retrieves the field value from the database for a specific single doctype.
+   * @param {string} doctype Name of the doctype
+   * @param {string} field Name of the field
+   * @returns Promise that resolves to the field's value.
+   */
+  async getSingleValue<T = any>(doctype: string, field: string): Promise<T> {
+    const params: any = {
+      doctype,
+      field,
+    };
+
+    return this.axios
+      .get('/api/method/frappe.client.get_single_value', { params })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while getting the value of single doctype.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Submit a document.
+   * @param {object} doc Document to be submitted
+   * @returns Promise that resolves to a submitted document.
+   */
+  async submit<T = any>(doc: object): Promise<T> {
+    return this.axios
+      .post('/api/method/frappe.client.submit', { doc })
+      .then((res) => res.data.message)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while submitting the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
+  }
+
+  /**
+   * Cancel a document.
+   * @param {string} doctype Name of the doctype
+   * @param {string} name Name of the document to be cancelled
+   * @returns Promise that resolves to a canceled document.
+   */
+  async cancel<T = any>(doctype: string, name: string): Promise<FrappeDoc<T>> {
+    return this.axios
+      .post('/api/method/frappe.client.cancel', { doctype, name })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw {
+          ...error.response.data,
+          httpStatus: error.response.status,
+          httpStatusText: error.response.statusText,
+          message: 'There was an error while cancelling the document.',
+          exception: error.response.data.exception ?? error.response.data.exc_type ?? '',
+        } as Error;
+      });
   }
 }
