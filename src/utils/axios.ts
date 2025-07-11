@@ -7,11 +7,28 @@ export function getAxiosClient(
   tokenType?: 'Bearer' | 'token',
   customHeaders?: object
 ): AxiosInstance {
-  return axios.create({
+  const axiosInstance = axios.create({
     baseURL: appURL,
     headers: getRequestHeaders(useToken, tokenType, token, appURL, customHeaders),
     withCredentials: true,
   });
+
+  // Add request interceptor to dynamically set CSRF token and auth token
+  axiosInstance.interceptors.request.use((config) => {
+    // Update CSRF token on each request if available
+    if (typeof window !== 'undefined' && window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
+      config.headers['X-Frappe-CSRF-Token'] = window.csrf_token;
+    }
+
+    // Update authorization token if using token auth
+    if (useToken && tokenType && token) {
+      config.headers.Authorization = `${tokenType} ${token()}`;
+    }
+
+    return config;
+  });
+
+  return axiosInstance;
 }
 
 export function getRequestHeaders(
